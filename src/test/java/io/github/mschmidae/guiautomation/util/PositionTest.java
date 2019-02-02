@@ -1,17 +1,17 @@
-package io.github.mschmidae.guiautomation.control.screen;
+package io.github.mschmidae.guiautomation.util;
 
 
 import org.junit.jupiter.api.Test;
 
 import static org.assertj.core.api.Assertions.*;
 
-class ScreenPositionTest {
+class PositionTest {
     @Test
     void twoScreenPositionsWithSameXAndYAreEqual() {
         int x = 0;
         int y = 1;
-        ScreenPosition position1 = new ScreenPosition(x, y);
-        ScreenPosition position2 = new ScreenPosition(x, y);
+        Position position1 = new Position(x, y);
+        Position position2 = new Position(x, y);
 
         assertThat(position1).isEqualTo(position2);
         assertThat(position1.getX()).isEqualTo(position2.getX());
@@ -20,17 +20,17 @@ class ScreenPositionTest {
 
     @Test
     void checkThrownExceptionIfPositionIsSmallerThanZero() {
-        assertThatThrownBy(() -> new ScreenPosition(-1, 0)).isInstanceOf(IllegalArgumentException.class);
-        assertThatThrownBy(() -> new ScreenPosition(0, -1)).isInstanceOf(IllegalArgumentException.class);
+        assertThatThrownBy(() -> new Position(-1, 0)).isInstanceOf(IllegalArgumentException.class);
+        assertThatThrownBy(() -> new Position(0, -1)).isInstanceOf(IllegalArgumentException.class);
     }
 
     @Test
     void addTwoScreenPositionsOriginalsUntouched() {
         int x = 1;
         int y = 2;
-        ScreenPosition position1 = new ScreenPosition(x, y);
-        ScreenPosition position2 = new ScreenPosition(x, y);
-        ScreenPosition position3 = position1.addSubPosition(position2);
+        Position position1 = new Position(x, y);
+        Position position2 = new Position(x, y);
+        Position position3 = position1.addSubPosition(position2);
         assertThat(position1.getX()).isEqualTo(x);
         assertThat(position1.getY()).isEqualTo(y);
         assertThat(position2.getX()).isEqualTo(x);
@@ -43,8 +43,8 @@ class ScreenPositionTest {
     void moveScreenPositionInPositiveDirection() {
         int x = 1;
         int y = 2;
-        ScreenPosition position = new ScreenPosition(x, y);
-        ScreenPosition moved = position.move(x, y);
+        Position position = new Position(x, y);
+        Position moved = position.move(x, y);
         assertThat(moved.getX()).isEqualTo(x + x);
         assertThat(moved.getY()).isEqualTo(y + y);
     }
@@ -53,8 +53,8 @@ class ScreenPositionTest {
     void moveScreenPositionInNegativeDirection() {
         int x = 1;
         int y = 2;
-        ScreenPosition position = new ScreenPosition(x, y);
-        ScreenPosition moved = position.move(-x, -y);
+        Position position = new Position(x, y);
+        Position moved = position.move(-x, -y);
         assertThat(moved.getX()).isEqualTo(0);
         assertThat(moved.getY()).isEqualTo(0);
     }
@@ -63,7 +63,7 @@ class ScreenPositionTest {
     void moveScreenPositionToNegativeCoordinatesShouldFail() {
         int x = 1;
         int y = 2;
-        ScreenPosition position = new ScreenPosition(x, y);
+        Position position = new Position(x, y);
         assertThatThrownBy(() -> position.move(-2, 0)).isInstanceOf(IllegalArgumentException.class);
         assertThatThrownBy(() -> position.move(0, -3)).isInstanceOf(IllegalArgumentException.class);
     }
@@ -75,10 +75,10 @@ class ScreenPositionTest {
         int y1 = 2;
         int y2 = 4;
 
-        ScreenPosition position1 = new ScreenPosition(x1, y1);
-        ScreenPosition position2 = new ScreenPosition(x2, y1);
-        ScreenPosition position3 = new ScreenPosition(x1, y2);
-        ScreenPosition position4 = new ScreenPosition(x2, y2);
+        Position position1 = new Position(x1, y1);
+        Position position2 = new Position(x2, y1);
+        Position position3 = new Position(x1, y2);
+        Position position4 = new Position(x2, y2);
 
         assertThat(position1.compareTo(position1)).isEqualTo(0);
         assertThat(position1.equals(position1)).isTrue();
@@ -107,40 +107,40 @@ class ScreenPositionTest {
 
     @Test
     void compareScreenPositionWithNull() {
-        assertThatThrownBy(() -> new ScreenPosition(0, 0).compareTo(null)).isInstanceOf(IllegalArgumentException.class);
+        assertThatThrownBy(() -> new Position(0, 0).compareTo(null)).isInstanceOf(IllegalArgumentException.class);
     }
 
     @Test
     void scaleUpOriginShouldReturnTheLeftUpperPositionOfTheSection() {
-        ScreenPosition leftUpper = new ScreenPosition(1, 2);
-        ScreenPosition origin = new ScreenPosition(0, 0);
-        ScreenSection sut = new ScreenSection(leftUpper, 2, 2);
+        Position leftUpper = new Position(1, 2);
+        Position origin = new Position(0, 0);
+        Section sut = new Section(leftUpper, 2, 2);
 
         assertThat(sut.scaleUpPosition(origin)).isEqualTo(leftUpper);
     }
 
     @Test
     void scaleUpShouldReturnTheLeftUpperPositionWithAddedToScale() {
-        ScreenPosition leftUpper = new ScreenPosition(1, 2);
-        ScreenPosition toScale = new ScreenPosition(3, 4);
-        ScreenSection sut = new ScreenSection(leftUpper, 5, 5);
+        Position leftUpper = new Position(1, 2);
+        Position toScale = new Position(3, 4);
+        Section sut = new Section(leftUpper, 5, 5);
 
-        assertThat(sut.scaleUpPosition(toScale)).isEqualTo(new ScreenPosition(4, 6));
+        assertThat(sut.scaleUpPosition(toScale)).isEqualTo(new Position(4, 6));
     }
 
     @Test
     void sectionCantScaleOutOfTheSection() {
-        ScreenPosition leftUpper = new ScreenPosition(1, 2);
-        ScreenSection sut = new ScreenSection(leftUpper, 3, 4);
-        assertThat(sut.scaleUpPosition(new ScreenPosition(2, 0))).isEqualTo(new ScreenPosition(3, 2));
-        assertThat(sut.scaleUpPosition(new ScreenPosition(0, 3))).isEqualTo(new ScreenPosition(1, 5));
-        assertThatThrownBy(() -> sut.scaleUpPosition(new ScreenPosition(3, 0))).isInstanceOf(IllegalArgumentException.class);
-        assertThatThrownBy(() -> sut.scaleUpPosition(new ScreenPosition(0, 4))).isInstanceOf(IllegalArgumentException.class);
+        Position leftUpper = new Position(1, 2);
+        Section sut = new Section(leftUpper, 3, 4);
+        assertThat(sut.scaleUpPosition(new Position(2, 0))).isEqualTo(new Position(3, 2));
+        assertThat(sut.scaleUpPosition(new Position(0, 3))).isEqualTo(new Position(1, 5));
+        assertThatThrownBy(() -> sut.scaleUpPosition(new Position(3, 0))).isInstanceOf(IllegalArgumentException.class);
+        assertThatThrownBy(() -> sut.scaleUpPosition(new Position(0, 4))).isInstanceOf(IllegalArgumentException.class);
     }
 
     @Test
     void toStringContainsXAndY() {
-        ScreenPosition sut = new ScreenPosition(1, 2);
+        Position sut = new Position(1, 2);
         assertThat(sut.toString()).contains("(1|2)");
     }
 }

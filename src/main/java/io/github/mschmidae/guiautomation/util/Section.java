@@ -1,4 +1,4 @@
-package io.github.mschmidae.guiautomation.control.screen;
+package io.github.mschmidae.guiautomation.util;
 
 import io.github.mschmidae.guiautomation.util.Ensure;
 import lombok.Getter;
@@ -7,23 +7,23 @@ import lombok.Getter;
  * Representation section on the screen.
  */
 @Getter
-public class ScreenSection {
+public class Section {
     /**
      * Left upper bound of the section.
      */
-    private final ScreenPosition startPosition;
+    private final Position startPosition;
 
     /**
      * Right lower bound of the section.
      */
-    private final ScreenPosition endPosition;
+    private final Position endPosition;
 
     /**
-     * Constructs a ScreenSection based on the two ScreenPositions.
+     * Constructs a Section based on the two ScreenPositions.
      * @param startPosition left upper bound
      * @param endPosition right lower bound
      */
-    public ScreenSection(final ScreenPosition startPosition, final ScreenPosition endPosition) {
+    public Section(final Position startPosition, final Position endPosition) {
         Ensure.notNull(startPosition);
         Ensure.notNull(endPosition);
         Ensure.greaterOrEqual(endPosition.getX(), startPosition.getX());
@@ -34,31 +34,31 @@ public class ScreenSection {
     }
 
     /**
-     * Constructs a ScreenSection based on the left upper bound, the width and the height.
+     * Constructs a Section based on the left upper bound, the width and the height.
      * @param startPosition left upper bound
      * @param width of the section, have to be greater than 0
      * @param height of the section, have to be greater than 0
      */
-    public ScreenSection(final ScreenPosition startPosition, final int width, final int height) {
+    public Section(final Position startPosition, final int width, final int height) {
         Ensure.notNull(startPosition);
         Ensure.greaterOrEqual(width, 1);
         Ensure.greaterOrEqual(height, 1);
 
         this.startPosition = startPosition;
-        this.endPosition = new ScreenPosition(startPosition.getX() + width - 1, startPosition.getY() + height - 1);
+        this.endPosition = new Position(startPosition.getX() + width - 1, startPosition.getY() + height - 1);
     }
 
     /**
-     * Calculates the ScreenPosition of the given sub position. The start position of the section is set as origin.
+     * Calculates the Position of the given sub position. The start position of the section is set as origin.
      * @param position to scale up
      * @return the position out of the section
      */
-    public ScreenPosition scaleUpPosition(final ScreenPosition position) {
+    public Position scaleUpPosition(final Position position) {
         Ensure.notNull(position);
         Ensure.smaller(position.getX(), getWidth());
         Ensure.smaller(position.getY(), getHeight());
 
-        return new ScreenPosition(getStartPosition().getX() + position.getX(), getStartPosition().getY() + position.getY());
+        return new Position(getStartPosition().getX() + position.getX(), getStartPosition().getY() + position.getY());
     }
 
     public int getWidth() {

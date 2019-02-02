@@ -1,20 +1,18 @@
-package io.github.mschmidae.guiautomation.control.screen;
-
-import io.github.mschmidae.guiautomation.util.Ensure;
+package io.github.mschmidae.guiautomation.util;
 
 /**
  * Representation of a Position on a screen.
  */
-public class ScreenPosition implements Comparable<ScreenPosition> {
+public class Position implements Comparable<Position> {
     private final int x;
     private final int y;
 
     /**
-     * Creates a ScreenPosition when the parameter are not negative.
+     * Creates a Position when the parameter are not negative.
      * @param x x-coordinate, is not allowed to be negative
      * @param y y-coordinate, is not allowed to be negative
      */
-    public ScreenPosition(final int x, final int y) {
+    public Position(final int x, final int y) {
         Ensure.notNegative(x);
         Ensure.notNegative(y);
         this.x = x;
@@ -24,9 +22,9 @@ public class ScreenPosition implements Comparable<ScreenPosition> {
     /**
      * Add the sub position to the position.
      * @param position sub position
-     * @return a new ScreenPosition with the summarized coordinates.
+     * @return a new Position with the summarized coordinates.
      */
-    public ScreenPosition addSubPosition(final ScreenPosition position) {
+    public Position addSubPosition(final Position position) {
         Ensure.notNull(position);
         return move(position.getX(), position.getY());
     }
@@ -35,31 +33,31 @@ public class ScreenPosition implements Comparable<ScreenPosition> {
      * Move the position by the values of the parameters. The summarized coordinates are not allowed to be negative.
      * @param moveX value to move x-coordinate
      * @param moveY value to move y-coordinate
-     * @return a new ScreenPosition with the summarized coordinates.
+     * @return a new Position with the summarized coordinates.
      */
-    public ScreenPosition move(final int moveX, final int moveY) {
-        return new ScreenPosition(getX() + moveX, getY() + moveY);
+    public Position move(final int moveX, final int moveY) {
+        return new Position(getX() + moveX, getY() + moveY);
     }
 
     /**
      * First criteria is the row number, second criteria is the column number.
      *
-     * @param screenPosition other position
+     * @param position other position
      * @return result of comparision
      */
     @Override
-    public int compareTo(final ScreenPosition screenPosition) {
-        Ensure.notNull(screenPosition);
-        int result = getY() - screenPosition.getY();
+    public int compareTo(final Position position) {
+        Ensure.notNull(position);
+        int result = getY() - position.getY();
         if (result == 0) {
-            result = getX() - screenPosition.getX();
+            result = getX() - position.getX();
         }
         return result;
     }
 
     @Override
     public String toString() {
-        return "ScreenPosition(" + getX() + "|" + getY() + ")";
+        return "Position(" + getX() + "|" + getY() + ")";
     }
 
     public int getX() {
@@ -75,7 +73,7 @@ public class ScreenPosition implements Comparable<ScreenPosition> {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
 
-        ScreenPosition that = (ScreenPosition) o;
+        Position that = (Position) o;
 
         if (x != that.x) return false;
         return y == that.y;
