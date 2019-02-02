@@ -1,4 +1,4 @@
 package io.github.mschmidae.guiautomation.util.image;
 
-public class Image {
+public class ImageExporter {
 }
