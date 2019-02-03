@@ -8,6 +8,8 @@ import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.MethodSource;
 
 import java.util.Arrays;
+import java.util.HashSet;
+import java.util.Set;
 import java.util.stream.Stream;
 
 import static org.assertj.core.api.Assertions.assertThat;
@@ -19,46 +21,89 @@ class ImagePositionFinderTest {
 
     @ParameterizedTest
     @MethodSource("finderProvider")
-    void findPositionOfUniquePatternUniquePosition(final ImagePositionFinder finder) {
-        Image screen = new ImageLoader().load("FuBK_testcard.png").orElseThrow(() -> new RuntimeException("Image could not be loaded"));
-        Image pattern = new Image(new int[]{-4259840, -16777025, -4276546, -4276546}, 2, 2);
+    void findPositionOfCommitButton(final ImagePositionFinder finder) {
+        Image screen = new ImageLoader().load("intellij_commit_changes.png").orElseThrow(() -> new RuntimeException("Screen image could not be loaded"));
+        Image pattern = new ImageLoader().load("intellij_button_commit.png").orElseThrow(() -> new RuntimeException("Pattern image could not be loaded"));
 
-        Position expected = new Position(1259, 519);
+        Position expected = new Position(485, 787);
 
+        assertThat(finder.at(screen, pattern, expected)).isTrue();
         assertThat(finder.find(screen, pattern)).isPresent().contains(expected);
     }
 
     @ParameterizedTest
     @MethodSource("finderProvider")
-    void findAllPositionsOfPatternUniquePosition(final ImagePositionFinder finder) {
-        Image screen = new ImageLoader().load("FuBK_testcard.png").orElseThrow(() -> new RuntimeException("Image could not be loaded"));
-        Image pattern = new Image(new int[]{-4259840, -16777025, -4276546, -4276546}, 2, 2);
+    void findPositionOfCancelButton(final ImagePositionFinder finder) {
+        Image screen = new ImageLoader().load("intellij_commit_changes.png").orElseThrow(() -> new RuntimeException("Screen image could not be loaded"));
+        Image pattern = new ImageLoader().load("intellij_button_cancel.png").orElseThrow(() -> new RuntimeException("Pattern image could not be loaded"));
 
-        Position expected = new Position(1259, 519);
-        Image pattern2 = screen.getSubImage(expected.getX(), expected.getY(), 2, 2);
-        System.out.println(Arrays.toString(pattern.getRgbData()));
-        System.out.println(Arrays.toString(pattern2.getRgbData()));
+        Position expected = new Position(599, 787);
 
-        assertThat(finder.findAll(screen, pattern)).hasSize(1).contains(expected);
-    }
-
-    @ParameterizedTest
-    @MethodSource("finderProvider")
-    void findFirstPositionsOfPatternWithMultiplePositions(final ImagePositionFinder finder) {
-        Image screen = new ImageLoader().load("FuBK_testcard.png").orElseThrow(() -> new RuntimeException("Image could not be loaded"));
-        Image pattern = screen.getSubImage(53, 16, 11, 8);
-
-        Position expected = new Position(53, 16);
-
+        assertThat(finder.at(screen, pattern, expected)).isTrue();
         assertThat(finder.find(screen, pattern)).isPresent().contains(expected);
     }
 
     @ParameterizedTest
     @MethodSource("finderProvider")
-    void findAllPositionsOfPatternWithMultiplePositions(final ImagePositionFinder finder) {
-        Image screen = new ImageLoader().load("FuBK_testcard.png").orElseThrow(() -> new RuntimeException("Image could not be loaded"));
-        Image pattern = screen.getSubImage(253, 16, 11, 8);
+    void findPositionOfHelpButton(final ImagePositionFinder finder) {
+        Image screen = new ImageLoader().load("intellij_commit_changes.png").orElseThrow(() -> new RuntimeException("Screen image could not be loaded"));
+        Image pattern = new ImageLoader().load("intellij_button_help.png").orElseThrow(() -> new RuntimeException("Pattern image could not be loaded"));
 
-        System.out.println(finder.findAll(screen, pattern));
+        Position expected = new Position(683, 787);
+
+        assertThat(finder.at(screen, pattern, expected)).isTrue();
+        assertThat(finder.find(screen, pattern)).isPresent().contains(expected);
+    }
+
+    @ParameterizedTest
+    @MethodSource("finderProvider")
+    void findAllPositionsOfUncheckedCheckboxes(final ImagePositionFinder finder) {
+        Image screen = new ImageLoader().load("intellij_commit_changes.png").orElseThrow(() -> new RuntimeException("Screen image could not be loaded"));
+        Image pattern = new ImageLoader().load("intellij_checkbox_unchecked.png").orElseThrow(() -> new RuntimeException("Pattern image could not be loaded"));
+
+        Position[] expected = new Position[] {
+                new Position(474, 106),
+                new Position(474, 129),
+                new Position(474, 152),
+                new Position(472, 224),
+                new Position(472, 248),
+                new Position(472, 272),
+                new Position(472, 344),
+                new Position(472, 368),
+                new Position(472, 392),
+                new Position(472, 416),
+                new Position(472, 440)
+        };
+
+        assertThat(finder.findAll(screen, pattern)).containsExactly(expected);
+    }
+
+    @ParameterizedTest
+    @MethodSource("finderProvider")
+    void findAllPositionsOfCheckedCheckboxes(final ImagePositionFinder finder) {
+        Image screen = new ImageLoader().load("intellij_commit_changes.png").orElseThrow(() -> new RuntimeException("Screen image could not be loaded"));
+        Image pattern = new ImageLoader().load("intellij_checkbox_checked.png").orElseThrow(() -> new RuntimeException("Pattern image could not be loaded"));
+
+        Position[] expected = new Position[] {
+                new Position(472, 296),
+                new Position(472, 320),
+                new Position(472, 567)
+        };
+
+        assertThat(finder.findAll(screen, pattern)).containsExactly(expected);
+    }
+
+    @ParameterizedTest
+    @MethodSource("finderProvider")
+    void findAllPositionsOfButtonFrames(final ImagePositionFinder finder) {
+        Image screen = new ImageLoader().load("intellij_commit_changes.png").orElseThrow(() -> new RuntimeException("Screen image could not be loaded"));
+        Image pattern = new ImageLoader().load("intellij_button_frame.png").orElseThrow(() -> new RuntimeException("Pattern image could not be loaded"));
+
+        Position[] expected = new Position[] {
+                new Position(599, 787),
+                new Position(683, 787)
+        };
+
+        assertThat(finder.findAll(screen, pattern)).containsExactly(expected);
     }
 }
