@@ -1,4 +1,4 @@
-package io.github.mschmidae.guiautomation.util;
+package io.github.mschmidae.guiautomation.util.helper;
 
 import org.junit.jupiter.api.Test;
 

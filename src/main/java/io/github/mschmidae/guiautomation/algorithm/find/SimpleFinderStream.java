@@ -1,6 +1,6 @@
 package io.github.mschmidae.guiautomation.algorithm.find;
 
-import io.github.mschmidae.guiautomation.util.Ensure;
+import io.github.mschmidae.guiautomation.util.helper.Ensure;
 import io.github.mschmidae.guiautomation.util.Position;
 import io.github.mschmidae.guiautomation.util.image.Image;
 

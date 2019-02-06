@@ -1,5 +1,7 @@
 package io.github.mschmidae.guiautomation.util;
 
+import io.github.mschmidae.guiautomation.util.helper.Ensure;
+
 /**
  * Representation of a Position on a screen.
  */

@@ -1,6 +1,6 @@
 package io.github.mschmidae.guiautomation.util;
 
-import io.github.mschmidae.guiautomation.util.Ensure;
+import io.github.mschmidae.guiautomation.util.helper.Ensure;
 import lombok.Getter;
 
 /**

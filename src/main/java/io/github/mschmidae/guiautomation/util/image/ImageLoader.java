@@ -1,6 +1,6 @@
 package io.github.mschmidae.guiautomation.util.image;
 
-import io.github.mschmidae.guiautomation.util.Ensure;
+import io.github.mschmidae.guiautomation.util.helper.Ensure;
 
 import javax.imageio.ImageIO;
 import java.awt.image.BufferedImage;
