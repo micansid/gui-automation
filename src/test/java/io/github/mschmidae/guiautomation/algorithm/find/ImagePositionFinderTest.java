@@ -2,14 +2,10 @@ package io.github.mschmidae.guiautomation.algorithm.find;
 
 import io.github.mschmidae.guiautomation.util.Position;
 import io.github.mschmidae.guiautomation.util.image.Image;
-import io.github.mschmidae.guiautomation.util.image.ImageExporter;
-import io.github.mschmidae.guiautomation.util.image.ImageLoader;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.MethodSource;
 
-import java.util.Arrays;
-import java.util.HashSet;
-import java.util.Set;
+import java.util.*;
 import java.util.stream.Stream;
 
 import static org.assertj.core.api.Assertions.assertThat;
@@ -22,88 +18,96 @@ class ImagePositionFinderTest {
     @ParameterizedTest
     @MethodSource("finderProvider")
     void findPositionOfCommitButton(final ImagePositionFinder finder) {
-        Image screen = new ImageLoader().load("intellij_commit_changes.png").orElseThrow(() -> new RuntimeException("Screen image could not be loaded"));
-        Image pattern = new ImageLoader().load("intellij_button_commit.png").orElseThrow(() -> new RuntimeException("Pattern image could not be loaded"));
-
-        Position expected = new Position(485, 787);
-
-        assertThat(finder.at(screen, pattern, expected)).isTrue();
-        assertThat(finder.find(screen, pattern)).isPresent().contains(expected);
+        findFirstPositionOf(finder, FinderTestData.BUTTON_COMMIT);
     }
 
     @ParameterizedTest
     @MethodSource("finderProvider")
     void findPositionOfCancelButton(final ImagePositionFinder finder) {
-        Image screen = new ImageLoader().load("intellij_commit_changes.png").orElseThrow(() -> new RuntimeException("Screen image could not be loaded"));
-        Image pattern = new ImageLoader().load("intellij_button_cancel.png").orElseThrow(() -> new RuntimeException("Pattern image could not be loaded"));
-
-        Position expected = new Position(599, 787);
-
-        assertThat(finder.at(screen, pattern, expected)).isTrue();
-        assertThat(finder.find(screen, pattern)).isPresent().contains(expected);
+        findFirstPositionOf(finder, FinderTestData.BUTTON_CANCEL);
     }
 
     @ParameterizedTest
     @MethodSource("finderProvider")
     void findPositionOfHelpButton(final ImagePositionFinder finder) {
-        Image screen = new ImageLoader().load("intellij_commit_changes.png").orElseThrow(() -> new RuntimeException("Screen image could not be loaded"));
-        Image pattern = new ImageLoader().load("intellij_button_help.png").orElseThrow(() -> new RuntimeException("Pattern image could not be loaded"));
+        findFirstPositionOf(finder, FinderTestData.BUTTON_HELP);
+    }
 
-        Position expected = new Position(683, 787);
+    @ParameterizedTest
+    @MethodSource("finderProvider")
+    void findFirstPositionsOfUncheckedCheckboxes(final ImagePositionFinder finder) {
+        findFirstPositionOf(finder, FinderTestData.CHECKBOX_UNCHECKED);
+    }
 
-        assertThat(finder.at(screen, pattern, expected)).isTrue();
-        assertThat(finder.find(screen, pattern)).isPresent().contains(expected);
+    @ParameterizedTest
+    @MethodSource("finderProvider")
+    void findFirstPositionsOfCheckedCheckboxes(final ImagePositionFinder finder) {
+        findFirstPositionOf(finder, FinderTestData.CHECKBOX_CHECKED);
+    }
+
+    @ParameterizedTest
+    @MethodSource("finderProvider")
+    void findFirstPositionsOfButtonFramesContainsTransparentParts(final ImagePositionFinder finder) {
+        findFirstPositionOf(finder, FinderTestData.BUTTON_FRAME);
+    }
+
+    @ParameterizedTest
+    @MethodSource("finderProvider")
+    void findAllPositionOfCommitButton(final ImagePositionFinder finder) {
+        findAllPositionOf(finder, FinderTestData.BUTTON_COMMIT);
+    }
+
+    @ParameterizedTest
+    @MethodSource("finderProvider")
+    void findAllPositionOfCancelButton(final ImagePositionFinder finder) {
+        findAllPositionOf(finder, FinderTestData.BUTTON_CANCEL);
+    }
+
+    @ParameterizedTest
+    @MethodSource("finderProvider")
+    void findAllPositionOfHelpButton(final ImagePositionFinder finder) {
+        findAllPositionOf(finder, FinderTestData.BUTTON_HELP);
     }
 
     @ParameterizedTest
     @MethodSource("finderProvider")
     void findAllPositionsOfUncheckedCheckboxes(final ImagePositionFinder finder) {
-        Image screen = new ImageLoader().load("intellij_commit_changes.png").orElseThrow(() -> new RuntimeException("Screen image could not be loaded"));
-        Image pattern = new ImageLoader().load("intellij_checkbox_unchecked.png").orElseThrow(() -> new RuntimeException("Pattern image could not be loaded"));
-
-        Position[] expected = new Position[] {
-                new Position(474, 106),
-                new Position(474, 129),
-                new Position(474, 152),
-                new Position(472, 224),
-                new Position(472, 248),
-                new Position(472, 272),
-                new Position(472, 344),
-                new Position(472, 368),
-                new Position(472, 392),
-                new Position(472, 416),
-                new Position(472, 440)
-        };
-
-        assertThat(finder.findAll(screen, pattern)).containsExactly(expected);
+        findAllPositionOf(finder, FinderTestData.CHECKBOX_UNCHECKED);
     }
 
     @ParameterizedTest
     @MethodSource("finderProvider")
     void findAllPositionsOfCheckedCheckboxes(final ImagePositionFinder finder) {
-        Image screen = new ImageLoader().load("intellij_commit_changes.png").orElseThrow(() -> new RuntimeException("Screen image could not be loaded"));
-        Image pattern = new ImageLoader().load("intellij_checkbox_checked.png").orElseThrow(() -> new RuntimeException("Pattern image could not be loaded"));
-
-        Position[] expected = new Position[] {
-                new Position(472, 296),
-                new Position(472, 320),
-                new Position(472, 567)
-        };
-
-        assertThat(finder.findAll(screen, pattern)).containsExactly(expected);
+        findAllPositionOf(finder, FinderTestData.CHECKBOX_CHECKED);
     }
 
     @ParameterizedTest
     @MethodSource("finderProvider")
-    void findAllPositionsOfButtonFrames(final ImagePositionFinder finder) {
-        Image screen = new ImageLoader().load("intellij_commit_changes.png").orElseThrow(() -> new RuntimeException("Screen image could not be loaded"));
-        Image pattern = new ImageLoader().load("intellij_button_frame.png").orElseThrow(() -> new RuntimeException("Pattern image could not be loaded"));
-
-        Position[] expected = new Position[] {
-                new Position(599, 787),
-                new Position(683, 787)
-        };
-
-        assertThat(finder.findAll(screen, pattern)).containsExactly(expected);
+    void findAllPositionsOfButtonFramesContainsTransparentParts(final ImagePositionFinder finder) {
+        findAllPositionOf(finder, FinderTestData.BUTTON_FRAME);
     }
+
+    @ParameterizedTest
+    @MethodSource("finderProvider")
+    void findAllPositionsOfAllPattern(final ImagePositionFinder finder) {
+        Map<Image, List<Position>> expected = new HashMap<>();
+        for(FinderTestData data: FinderTestData.values()) {
+            expected.put(data.getImage(), data.getPositions());
+        }
+
+        Map<Image, List<Position>> result = finder.findAll(FinderTestData.SCREEN.getImage(), expected.keySet());
+
+        assertThat(result).isEqualTo(expected);
+    }
+
+
+    private void findFirstPositionOf(final ImagePositionFinder finder, final FinderTestData pattern) {
+        assertThat(finder.at(FinderTestData.SCREEN.getImage(), pattern.getImage(), pattern.getPositions().get(0))).isTrue();
+        assertThat(finder.find(FinderTestData.SCREEN.getImage(), pattern.getImage())).isPresent().contains(pattern.getPositions().get(0));
+    }
+
+    private void findAllPositionOf(final ImagePositionFinder finder, final FinderTestData pattern) {
+        assertThat(finder.findAll(FinderTestData.SCREEN.getImage(), pattern.getImage())).containsExactly(pattern.getPositions().toArray(new Position[pattern.getPositions().size()]));
+    }
+
 }
