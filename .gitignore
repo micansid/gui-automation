@@ -3,5 +3,6 @@
 .classpath
 *.iml
 *.prefs
+*.png
 target/
 pom.xml.versionsBackup
