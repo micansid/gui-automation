@@ -4,5 +4,6 @@
 *.iml
 *.prefs
 *.png
+!**/resources/**.png
 target/
 pom.xml.versionsBackup
