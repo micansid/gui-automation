@@ -10,6 +10,7 @@ import lombok.Getter;
 import java.awt.Color;
 import java.awt.image.BufferedImage;
 import java.util.Arrays;
+import java.util.function.Supplier;
 
 /**
  * Immutable interpretation of a image used in the context of screen. The class is inspired by the class BufferedImage.
@@ -17,7 +18,7 @@ import java.util.Arrays;
  */
 @EqualsAndHashCode
 @Getter(AccessLevel.PUBLIC)
-public class Image {
+public class Image implements Supplier<Image> {
 
     /**
      * RGB information of the image.
@@ -156,6 +157,11 @@ public class Image {
         Ensure.notNegative(y);
         Ensure.smaller(x, getWidth());
         Ensure.smaller(y, getHeight());
+    }
+
+    @Override
+    public Image get() {
+        return this;
     }
 }
 

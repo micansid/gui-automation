@@ -8,8 +8,9 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
+import java.util.function.Supplier;
 
-public enum FinderTestData {
+public enum FinderTestData implements Supplier<Image> {
     SCREEN("intellij_commit_changes.png", new Position(0, 0)),
     BUTTON_COMMIT("intellij_button_commit.png", new Position(485, 787)),
     BUTTON_CANCEL("intellij_button_cancel.png", new Position(599, 787)),
@@ -32,5 +33,10 @@ public enum FinderTestData {
 
     public List<Position> getPositions() {
         return Collections.unmodifiableList(positions);
+    }
+
+    @Override
+    public Image get() {
+        return getImage();
     }
 }
