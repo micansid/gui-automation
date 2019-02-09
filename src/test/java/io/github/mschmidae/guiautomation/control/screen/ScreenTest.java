@@ -1,6 +1,7 @@
 package io.github.mschmidae.guiautomation.control.screen;
 
 import io.github.mschmidae.guiautomation.algorithm.find.FinderTestData;
+import io.github.mschmidae.guiautomation.util.Position;
 import io.github.mschmidae.guiautomation.util.Section;
 import io.github.mschmidae.guiautomation.util.image.Image;
 import org.junit.jupiter.api.Test;
@@ -53,5 +54,21 @@ class ScreenTest {
         assertThat(sut.positionOf(pattern))
                 .isPresent()
                 .contains(FinderTestData.BUTTON_CANCEL.getPositions().get(0));
+    }
+
+    @Test
+    void positionsOfUncheckedCheckboxes() {
+        Screen sut = new Screen(FinderTestData.SCREEN);
+
+        assertThat(sut.positionsOf(FinderTestData.CHECKBOX_UNCHECKED))
+                .containsExactly(FinderTestData.CHECKBOX_UNCHECKED.getPositions()
+                        .toArray(new Position[FinderTestData.CHECKBOX_UNCHECKED.getPositions().size()]));
+    }
+
+    @Test
+    void heightAndWidthOfTheScreenImageSupplier() {
+        Screen sut = new Screen(FinderTestData.SCREEN);
+        assertThat(sut.getWidth()).isEqualTo(771);
+        assertThat(sut.getHeight()).isEqualTo(827);
     }
 }
