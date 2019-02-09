@@ -1,6 +1,9 @@
 package io.github.mschmidae.guiautomation.util.helper;
 
+import io.github.mschmidae.guiautomation.util.image.Image;
+
 import java.util.Collection;
+import java.util.function.Supplier;
 
 public final class Ensure {
     private Ensure() {
@@ -81,5 +84,10 @@ public final class Ensure {
         for (T element : collection) {
             notNull(element);
         }
+    }
+
+    public static <T> void suppliesNotNull(final Supplier<T> supplier) {
+        Ensure.notNull(supplier);
+        Ensure.notNull(supplier.get());
     }
 }
