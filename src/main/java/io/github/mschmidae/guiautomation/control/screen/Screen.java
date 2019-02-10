@@ -47,13 +47,8 @@ public class Screen {
         Ensure.notNull(section);
 
         Image screen = getScreenSupplier().get().getSubImage(section);
-        Optional<Position> subPosition = getFinder().find(screen, supplier.get());
-        Optional<Position> result = Optional.empty();
-        if (subPosition.isPresent()) {
-            result = Optional.of(section.scaleUpPosition(subPosition.get()));
-        }
-
-        return result;
+        return getFinder().find(screen, supplier.get())
+                .map(section::scaleUpPosition);
     }
 
     public Optional<Position> positionOf(final List<Supplier<Image>> suppliers) {
@@ -153,14 +148,16 @@ public class Screen {
         return positionOf(supplier, section).map(position -> position.addSubPosition(supplier.get().middle()));
     }
 
-    /*
-    ToDo
     public Optional<Position> clickPositionOf(final List<Supplier<Image>> suppliers) {
         Ensure.notNull(suppliers);
         suppliers.forEach(Ensure::suppliesNotNull);
-        return positionOf(suppliers).map(position -> position.addSubPosition(supplier.get().middle()));
+
+        return positionOf(suppliers).map(position -> position.addSubPosition(
+                suppliers.stream().map(Supplier::get)
+                        .filter(image -> imageAt(image, position))
+                        .findFirst().map(Image::middle).orElse(new Position(0,0))));
     }
-    */
+
 
     /*
     ToDo

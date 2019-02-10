@@ -117,6 +117,16 @@ class ScreenTest {
     }
 
     @Test
+    void clickPositionOfListReturnsPositionOfFirstImage() {
+        Screen sut = new Screen(FinderTestData.SCREEN);
+        List<Supplier<Image>> pattern = Arrays.asList(FinderTestData.BUTTON_CANCEL, FinderTestData.BUTTON_HELP, FinderTestData.BUTTON_COMMIT);
+
+        assertThat(sut.clickPositionOf(pattern))
+                .isPresent()
+                .contains(FinderTestData.BUTTON_CANCEL.getPositions().get(0).move(36, 12));
+    }
+
+    @Test
     void clickPositionsOfUncheckedCheckboxes() {
         Screen sut = new Screen(FinderTestData.SCREEN);
         assertThat(sut.clickPositionsOf(FinderTestData.CHECKBOX_UNCHECKED))
