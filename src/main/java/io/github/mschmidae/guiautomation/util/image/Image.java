@@ -152,6 +152,10 @@ public class Image implements Supplier<Image> {
         return result;
     }
 
+    public Position middle() {
+        return new Position(getWidth() / 2, getHeight() / 2);
+    }
+
     private void ensureCoordinates(final int x, final int y) {
         Ensure.notNegative(x);
         Ensure.notNegative(y);

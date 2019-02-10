@@ -85,4 +85,16 @@ class ImageTest {
         result[0] = 2;
         assertThat(sut.getRgb(0,0)).isEqualTo(0);
     }
+
+    @Test
+    void middleOfEvenImageWidthAndHeight() {
+        Image sut = new Image(new int[]{0,0,0,0,0,0,0,0}, 4, 2);
+        assertThat(sut.middle()).isEqualTo(new Position(2, 1));
+    }
+
+    @Test
+    void middleOfOddImageWidthAndHeight() {
+        Image sut = new Image(new int[]{0,0,0,0,0,0,0,0,0,0,0,0,0,0,0}, 3, 5);
+        assertThat(sut.middle()).isEqualTo(new Position(1, 2));
+    }
 }
