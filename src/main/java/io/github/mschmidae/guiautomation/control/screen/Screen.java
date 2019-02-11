@@ -11,7 +11,7 @@ import java.util.*;
 import java.util.function.Supplier;
 import java.util.stream.Collectors;
 
-public class Screen {
+public class Screen implements Supplier<Image>{
     private final Supplier<Image> screenSupplier;
     private final ImagePositionFinder finder;
 
@@ -32,18 +32,13 @@ public class Screen {
     }
 
     public Optional<Position> positionOf(final Supplier<Image> supplier) {
-        Ensure.notNull(supplier);
-        Image image = supplier.get();
-        Ensure.notNull(image);
-
+        Ensure.suppliesNotNull(supplier);
         Image screen = getScreenSupplier().get();
-        return getFinder().find(screen, image);
+        return getFinder().find(screen, supplier.get());
     }
 
     public Optional<Position> positionOf(final Supplier<Image> supplier, final Section section) {
-        Ensure.notNull(supplier);
-        Image image = supplier.get();
-        Ensure.notNull(image);
+        Ensure.suppliesNotNull(supplier);
         Ensure.notNull(section);
 
         Image screen = getScreenSupplier().get().getSubImage(section);
@@ -52,39 +47,30 @@ public class Screen {
     }
 
     public Optional<Position> positionOf(final List<Supplier<Image>> suppliers) {
-        Ensure.notNull(suppliers);
+        Ensure.containsNoNull(suppliers);
         suppliers.forEach(Ensure::suppliesNotNull);
 
-        List<Image> images = suppliers.stream()
-                .map(Supplier::get)
-                .collect(Collectors.toList());
-
         Image screen = getScreenSupplier().get();
-        return images.stream()
+        return suppliers.stream()
+                .map(Supplier::get)
                 .flatMap(pattern -> getFinder().findAll(screen, pattern).stream())
                 .findFirst();
     }
 
-    /*
-    ToDo
+
     public Optional<Position> positionOf(final List<Supplier<Image>> suppliers, final Section section) {
-        Ensure.notNull(suppliers);
-        List<Image> images = suppliers.stream()
-                .map(Supplier::get)
-                .collect(Collectors.toList());
-        Ensure.notNull(images);
+        Ensure.containsNoNull(suppliers);
+        suppliers.forEach(Ensure::suppliesNotNull);
         Ensure.notNull(section);
 
         Image screen = getScreenSupplier().get().getSubImage(section);
-        Optional<ScreenPosition> subPosition = images.stream().flatMap(pattern -> getFinder().findAll(screen, pattern).stream()).findFirst();
-        Optional<ScreenPosition> result = Optional.empty();
-        if (subPosition.isPresent()) {
-            result = Optional.of(section.scaleUpPosition(subPosition.get()));
-        }
-
-        return result;
+        return suppliers.stream()
+                .map(Supplier::get)
+                .flatMap(pattern -> getFinder().findAll(screen, pattern).stream())
+                .findFirst()
+                .map(section::scaleUpPosition);
     }
-    */
+
 
     public List<Position> positionsOf(final Supplier<Image> supplier) {
         Ensure.suppliesNotNull(supplier);
@@ -93,8 +79,7 @@ public class Screen {
         return getFinder().findAll(screen, supplier.get());
     }
 
-    /*
-    ToDo
+
     public List<Position> positionsOf(final Supplier<Image> supplier, final Section section) {
         Ensure.suppliesNotNull(supplier);
         Ensure.notNull(section);
@@ -104,9 +89,8 @@ public class Screen {
         return getFinder().findAll(screen, supplier.get()).stream()
                 .map(section::scaleUpPosition)
                 .collect(Collectors.toList());
-
     }
-    */
+
 
     public Map<Image, List<Position>> positionsOf(final Set<Supplier<Image>> suppliers) {
         Ensure.containsNoNull(suppliers);
@@ -117,25 +101,21 @@ public class Screen {
         return getFinder().findAll(screen, images);
     }
 
-    /*
-    ToDo
-    public Map<ScreenImage, List<ScreenPosition>> positionsOf(final Set<ScreenImage> images, final ScreenSection section) {
-        Ensure.notNull(images);
+    public Map<Image, List<Position>> positionsOf(final Set<Supplier<Image>> suppliers, final Section section) {
+        Ensure.containsNoNull(suppliers);
+        suppliers.forEach(Ensure::suppliesNotNull);
         Ensure.notNull(section);
 
-        ScreenImage screen = getScreenSupplier().get().getSubImage(section);
+        Set<Image> images = suppliers.stream().map(Supplier::get).collect(Collectors.toSet());
+        Image screen = getScreenSupplier().get().getSubImage(section);
 
-        Map<ScreenImage, List<ScreenPosition>> result = new HashMap<>();
-
-        for (Map.Entry<ScreenImage, List<ScreenPosition>> entry: getFinder().findAll(screen, images).entrySet()) {
-            result.put(entry.getKey(), entry.getValue().stream()
-                    .map(section::scaleUpPosition)
-                    .collect(Collectors.toList()));
-        }
-
-        return result;
+        return getFinder().findAll(screen, images).entrySet().stream()
+                .peek(entry -> entry.setValue(entry.getValue().stream()
+                        .map(section::scaleUpPosition)
+                        .collect(Collectors.toList())))
+                .collect(Collectors.toMap(Map.Entry::getKey, Map.Entry::getValue));
     }
-    */
+
 
     public Optional<Position> clickPositionOf(final Supplier<Image> supplier) {
         Ensure.suppliesNotNull(supplier);
@@ -159,28 +139,18 @@ public class Screen {
     }
 
 
-    /*
-    ToDo
-    public Optional<ScreenPosition> clickPositionOf(final List<ScreenImage> images, final ScreenSection section) {
-        Ensure.notNull(images);
 
-        ScreenImage screen = getScreenSupplier().get().getSubImage(section);
-        Optional<ScreenPosition> imagePosition = images.stream().flatMap(pattern -> getFinder().findAll(screen, pattern).stream()).findFirst();
-        Optional<ScreenPosition> result = Optional.empty();
+    public Optional<Position> clickPositionOf(final List<Supplier<Image>> suppliers, final Section section) {
+        Ensure.notNull(suppliers);
+        suppliers.forEach(Ensure::suppliesNotNull);
+        Ensure.notNull(section);
 
-        if (imagePosition.isPresent()) {
-            Optional<ScreenImage> image = images.stream().filter(pattern -> getFinder().at(screen, pattern, imagePosition.get())).findFirst();
-            if (image.isPresent()) {
-                ScreenPosition middleOfImage = new ScreenPosition(image.get().getWidth() / 2, image.get().getHeight() / 2);
-                result = Optional.of(section.scaleUpPosition(imagePosition.get().addSubPosition(middleOfImage)));
-            } else {
-                throw new RuntimeException("Error in finder! A returned position doesn't match any image");
-            }
-        }
-
-        return result;
+        return positionOf(suppliers, section).map(position -> position.addSubPosition(
+                suppliers.stream().map(Supplier::get)
+                        .filter(image -> imageAt(image, position))
+                        .findFirst().map(Image::middle).orElse(new Position(0,0))));
     }
-    */
+
 
     public List<Position> clickPositionsOf(final Supplier<Image> supplier) {
         Ensure.suppliesNotNull(supplier);
@@ -189,22 +159,27 @@ public class Screen {
                 .collect(Collectors.toList());
     }
 
-    /*
-    ToDo
-    public List<ScreenPosition> clickPositionsOf(final ScreenImage image, final ScreenSection section) {
-        Ensure.notNull(image);
+    public List<Position> clickPositionsOf(final Supplier<Image> supplier, final Section section) {
+        Ensure.suppliesNotNull(supplier);
         Ensure.notNull(section);
 
-        ScreenPosition middleOfImage = new ScreenPosition(image.getWidth() / 2, image.getHeight() / 2);
-        return positionsOf(image, section).stream().map(position -> position.addSubPosition(middleOfImage)).collect(Collectors.toList());
+        return positionsOf(supplier, section).stream()
+                .map(position -> position.addSubPosition(supplier.get().middle()))
+                .collect(Collectors.toList());
     }
-    */
+
 
     public Map<Image, List<Position>> clickPositionsOf(final Set<Supplier<Image>> suppliers) {
         Ensure.containsNoNull(suppliers);
         suppliers.forEach(Ensure::suppliesNotNull);
 
+        return positionsOf(suppliers).entrySet().stream()
+                .peek(entry -> entry.setValue(entry.getValue().stream().map(position -> position
+                        .addSubPosition(entry.getKey().middle())).collect(Collectors.toList())))
+                .collect(Collectors.toMap(Map.Entry::getKey, Map.Entry::getValue));
+/*
         Map<Image, List<Position>> result = new HashMap<>();
+
         for (Map.Entry<Image, List<Position>> entry : positionsOf(suppliers).entrySet()) {
             result.put(entry.getKey(),
                     entry.getValue().stream().map(position -> position
@@ -212,6 +187,7 @@ public class Screen {
         }
 
         return result;
+        */
     }
 
     /*
@@ -255,5 +231,10 @@ public class Screen {
 
     private ImagePositionFinder getFinder() {
         return finder;
+    }
+
+    @Override
+    public Image get() {
+        return getScreenSupplier().get();
     }
 }

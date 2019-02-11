@@ -59,11 +59,33 @@ class ScreenTest {
     }
 
     @Test
+    void positionOfListReturnsPositionOfFirstImageInSection() {
+        Screen sut = new Screen(FinderTestData.SCREEN);
+        List<Supplier<Image>> pattern = Arrays.asList(FinderTestData.BUTTON_COMMIT, FinderTestData.BUTTON_CANCEL, FinderTestData.BUTTON_HELP);
+        Section section = new Section(new Position(500,0), new Position(770, 826));
+
+        assertThat(sut.positionOf(pattern, section))
+                .isPresent()
+                .contains(FinderTestData.BUTTON_CANCEL.getPositions().get(0));
+    }
+
+
+
+    @Test
     void positionsOfUncheckedCheckboxes() {
         Screen sut = new Screen(FinderTestData.SCREEN);
 
         assertThat(sut.positionsOf(FinderTestData.CHECKBOX_UNCHECKED))
                 .isEqualTo(FinderTestData.CHECKBOX_UNCHECKED.getPositions());
+    }
+
+    @Test
+    void positionsOfUncheckedCheckboxesInSection() {
+        Screen sut = new Screen(FinderTestData.SCREEN);
+        Section section = new Section(new Position(474, 0), new Position(770, 826));
+
+        assertThat(sut.positionsOf(FinderTestData.CHECKBOX_UNCHECKED, section))
+                .containsExactly(new Position(474, 106), new Position(474, 129), new Position(474, 152));
     }
 
     @Test
@@ -80,6 +102,26 @@ class ScreenTest {
         expected.put(FinderTestData.CHECKBOX_UNCHECKED.getImage(), FinderTestData.CHECKBOX_UNCHECKED.getPositions());
 
         Map<Image, List<Position>> result = sut.positionsOf(patternSuppliers);
+        assertThat(result).isEqualTo(expected);
+    }
+
+    @Test
+    void positionsOfDifferentPatternsInSection() {
+        Screen sut = new Screen(FinderTestData.SCREEN);
+        Set<Supplier<Image>> patternSuppliers = new HashSet<>();
+        patternSuppliers.add(FinderTestData.CHECKBOX_CHECKED);
+        patternSuppliers.add(FinderTestData.CHECKBOX_UNCHECKED);
+        patternSuppliers.add(FinderTestData.BUTTON_COMMIT);
+        patternSuppliers.add(FinderTestData.BUTTON_CANCEL);
+        Section section = new Section(new Position(474, 0), new Position(599, 826));
+
+        Map<Image, List<Position>> expected = new HashMap<>();
+        expected.put(FinderTestData.BUTTON_COMMIT.getImage(), FinderTestData.BUTTON_COMMIT.getPositions());
+        expected.put(FinderTestData.BUTTON_CANCEL.getImage(), new ArrayList<>());
+        expected.put(FinderTestData.CHECKBOX_CHECKED.getImage(), new ArrayList<>());
+        expected.put(FinderTestData.CHECKBOX_UNCHECKED.getImage(), Arrays.asList(new Position(474, 106), new Position(474, 129), new Position(474, 152)));
+
+        Map<Image, List<Position>> result = sut.positionsOf(patternSuppliers, section);
         assertThat(result).isEqualTo(expected);
     }
 
@@ -127,12 +169,34 @@ class ScreenTest {
     }
 
     @Test
+    void clickPositionOfListReturnsPositionOfFirstImageInSection() {
+        Screen sut = new Screen(FinderTestData.SCREEN);
+        List<Supplier<Image>> pattern = Arrays.asList(FinderTestData.BUTTON_COMMIT, FinderTestData.BUTTON_CANCEL, FinderTestData.BUTTON_HELP);
+        Section section = new Section(new Position(500,0), new Position(770, 826));
+
+        assertThat(sut.clickPositionOf(pattern, section))
+                .isPresent()
+                .contains(FinderTestData.BUTTON_CANCEL.getPositions().get(0).move(36, 12));
+    }
+
+    @Test
     void clickPositionsOfUncheckedCheckboxes() {
         Screen sut = new Screen(FinderTestData.SCREEN);
         assertThat(sut.clickPositionsOf(FinderTestData.CHECKBOX_UNCHECKED))
                 .isEqualTo(FinderTestData.CHECKBOX_UNCHECKED.getPositions()
                         .stream().map(position -> position.move(7, 7))
                         .collect(Collectors.toList()));
+    }
+
+    @Test
+    void clickPositionsOfUncheckedCheckboxesInSection() {
+        Screen sut = new Screen(FinderTestData.SCREEN);
+        Section section = new Section(new Position(474, 0), new Position(770, 826));
+
+        assertThat(sut.clickPositionsOf(FinderTestData.CHECKBOX_UNCHECKED, section))
+                .containsExactly(new Position(474, 106).move(7, 7),
+                        new Position(474, 129).move(7, 7),
+                        new Position(474, 152).move(7, 7));
     }
 
     @Test
