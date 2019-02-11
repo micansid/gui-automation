@@ -223,6 +223,30 @@ class ScreenTest {
     }
 
     @Test
+    void clickPositionsOfDifferentPatternsInSection() {
+        Screen sut = new Screen(FinderTestData.SCREEN);
+        Set<Supplier<Image>> patternSuppliers = new HashSet<>();
+        patternSuppliers.add(FinderTestData.CHECKBOX_CHECKED);
+        patternSuppliers.add(FinderTestData.CHECKBOX_UNCHECKED);
+        patternSuppliers.add(FinderTestData.BUTTON_COMMIT);
+        patternSuppliers.add(FinderTestData.BUTTON_CANCEL);
+        Section section = new Section(new Position(474, 0), new Position(599, 826));
+
+        Map<Image, List<Position>> expected = new HashMap<>();
+        expected.put(FinderTestData.BUTTON_COMMIT.getImage(), FinderTestData.BUTTON_COMMIT.getPositions()
+                .stream().map(position -> position.move(51, 12))
+                .collect(Collectors.toList()));
+        expected.put(FinderTestData.BUTTON_CANCEL.getImage(), new ArrayList<>());
+        expected.put(FinderTestData.CHECKBOX_CHECKED.getImage(), new ArrayList<>());
+        expected.put(FinderTestData.CHECKBOX_UNCHECKED.getImage(), Arrays.asList(new Position(474, 106).move(7, 7),
+                new Position(474, 129).move(7, 7),
+                new Position(474, 152).move(7, 7)));
+
+        Map<Image, List<Position>> result = sut.clickPositionsOf(patternSuppliers, section);
+        assertThat(result).isEqualTo(expected);
+    }
+
+    @Test
     void heightAndWidthOfTheScreenImageSupplier() {
         Screen sut = new Screen(FinderTestData.SCREEN);
         assertThat(sut.getWidth()).isEqualTo(771);

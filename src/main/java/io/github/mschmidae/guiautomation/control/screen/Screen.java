@@ -190,24 +190,18 @@ public class Screen implements Supplier<Image>{
         */
     }
 
-    /*
-    ToDo
-    public Map<ScreenImage, List<ScreenPosition>> clickPositionsOf(final Set<ScreenImage> images, final ScreenSection section) {
-        Ensure.notNull(images);
+
+    public Map<Image, List<Position>> clickPositionsOf(final Set<Supplier<Image>> suppliers, final Section section) {
+        Ensure.containsNoNull(suppliers);
+        suppliers.forEach(Ensure::suppliesNotNull);
         Ensure.notNull(section);
 
-        Map<ScreenImage, List<ScreenPosition>> result = new HashMap<>();
-
-        for (Map.Entry<ScreenImage, List<ScreenPosition>> entry: positionsOf(images, section).entrySet()) {
-            ScreenPosition middleOfImage = new ScreenPosition(entry.getKey().getWidth() / 2, entry.getKey().getHeight() / 2);
-            result.put(entry.getKey(), entry.getValue().stream()
-                    .map(position -> position.addSubPosition(middleOfImage))
-                    .collect(Collectors.toList()));
-        }
-
-        return result;
+        return positionsOf(suppliers, section).entrySet().stream()
+                .peek(entry -> entry.setValue(entry.getValue().stream().map(position -> position
+                        .addSubPosition(entry.getKey().middle())).collect(Collectors.toList())))
+                .collect(Collectors.toMap(Map.Entry::getKey, Map.Entry::getValue));
     }
-    */
+
 
     public boolean imageAt(final Supplier<Image> supplier, final Position position) {
         Ensure.suppliesNotNull(supplier);
