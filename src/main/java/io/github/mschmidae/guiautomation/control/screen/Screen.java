@@ -177,17 +177,6 @@ public class Screen implements Supplier<Image>{
                 .peek(entry -> entry.setValue(entry.getValue().stream().map(position -> position
                         .addSubPosition(entry.getKey().middle())).collect(Collectors.toList())))
                 .collect(Collectors.toMap(Map.Entry::getKey, Map.Entry::getValue));
-/*
-        Map<Image, List<Position>> result = new HashMap<>();
-
-        for (Map.Entry<Image, List<Position>> entry : positionsOf(suppliers).entrySet()) {
-            result.put(entry.getKey(),
-                    entry.getValue().stream().map(position -> position
-                            .addSubPosition(entry.getKey().middle())).collect(Collectors.toList()));
-        }
-
-        return result;
-        */
     }
 
 
