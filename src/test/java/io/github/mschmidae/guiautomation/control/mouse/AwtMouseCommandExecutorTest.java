@@ -11,7 +11,8 @@ class AwtMouseCommandExecutorTest {
   void clickLeftButton() throws InterruptedException {
     MouseCommandExecutor executor = new AwtMouseCommandExecutor();
 
-    System.out.println("Test started: Move the mouse to a position to verify a click of the left mouse button.");
+    System.out.println("Test started: Move the mouse to a position to verify a click of the left " +
+        "mouse button.");
     System.out.println("Waiting 10 seconds");
     Thread.sleep(10_000);
 

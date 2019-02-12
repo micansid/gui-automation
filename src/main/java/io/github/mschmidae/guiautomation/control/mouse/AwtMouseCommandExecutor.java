@@ -20,6 +20,10 @@ public class AwtMouseCommandExecutor implements MouseCommandExecutor {
 
   private final Robot robot;
 
+  /**
+   * Constructor of AwtMouseCommandExecutor.
+   * @throws RuntimeException when the generation of a new Robot fails with an AWTException
+   */
   public AwtMouseCommandExecutor() {
     Robot newRobot;
     try {

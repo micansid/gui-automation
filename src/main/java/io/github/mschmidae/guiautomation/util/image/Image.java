@@ -39,9 +39,9 @@ public class Image implements Supplier<Image> {
    */
   private final int height;
 
+
   /**
    * Construct a ScreenImage from a BufferedImage.
-   *
    * @param image to interpret
    */
   public Image(final BufferedImage image) {
@@ -49,9 +49,9 @@ public class Image implements Supplier<Image> {
         image.getWidth()), image.getWidth(), image.getHeight());
   }
 
+
   /**
    * Construct a ScreenImage from an array with the RGB information.
-   *
    * @param imageData RGB information, the size of the array have to be width * height.
    * @param width     of the image
    * @param height    of the image
@@ -76,13 +76,14 @@ public class Image implements Supplier<Image> {
     return getRgb(position.getX(), position.getY());
   }
 
+
   public int[] getRgbData() {
     return Arrays.copyOf(getImageData(), getWidth() * getHeight());
   }
 
+
   /**
    * Get sub ScreenImage with the given parameters.
-   *
    * @param x x-coordinate of the left upper bound
    * @param y y-coordinate of the left upper bound
    * @param w width of the new image
@@ -93,9 +94,9 @@ public class Image implements Supplier<Image> {
     return new Image(bufferedImage().getSubimage(x, y, w, h));
   }
 
+
   /**
    * Get sub ScreenImag of the given section.
-   *
    * @param section defining the sub ScreenImage position and size
    * @return ScreenImage of the defined section
    */
@@ -103,7 +104,6 @@ public class Image implements Supplier<Image> {
     return getSubImage(section.getStartPosition().getX(), section.getStartPosition().getY(),
         section.getWidth(), section.getHeight());
   }
-
 
   public int getRed(final int x, final int y) {
     ensureCoordinates(x, y);
@@ -155,6 +155,11 @@ public class Image implements Supplier<Image> {
     return isTransparent(position.getX(), position.getY());
   }
 
+
+  /**
+   * Convert image to BufferedImage.
+   * @return BufferedImage of this image
+   */
   public BufferedImage bufferedImage() {
     BufferedImage result = new BufferedImage(getWidth(), getHeight(), BufferedImage.TYPE_INT_ARGB);
     result.setRGB(0, 0, getWidth(), getHeight(), getImageData(), 0, getWidth());

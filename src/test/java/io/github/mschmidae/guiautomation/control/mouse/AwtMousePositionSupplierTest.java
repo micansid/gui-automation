@@ -1,10 +1,9 @@
 package io.github.mschmidae.guiautomation.control.mouse;
 
 import io.github.mschmidae.guiautomation.util.Position;
+import java.util.function.Supplier;
 import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.Test;
-
-import java.util.function.Supplier;
 
 class AwtMousePositionSupplierTest {
   @Disabled

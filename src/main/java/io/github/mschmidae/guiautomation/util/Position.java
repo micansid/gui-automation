@@ -11,7 +11,6 @@ public class Position implements Comparable<Position> {
 
   /**
    * Creates a Position when the parameter are not negative.
-   *
    * @param x x-coordinate, is not allowed to be negative
    * @param y y-coordinate, is not allowed to be negative
    */
@@ -24,7 +23,6 @@ public class Position implements Comparable<Position> {
 
   /**
    * Add the sub position to the position.
-   *
    * @param position sub position
    * @return a new Position with the summarized coordinates.
    */
@@ -36,7 +34,6 @@ public class Position implements Comparable<Position> {
   /**
    * Move the position by the values of the parameters. The summarized coordinates are not allowed
    * to be negative.
-   *
    * @param moveX value to move x-coordinate
    * @param moveY value to move y-coordinate
    * @return a new Position with the summarized coordinates.

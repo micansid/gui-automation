@@ -9,6 +9,11 @@ import java.util.Optional;
 import javax.imageio.ImageIO;
 
 public class ImageLoader {
+  /**
+   * Load a image from the resources directory.
+   * @param path of the image to load
+   * @return BufferedImage when the image exists, else an empty optional
+   */
   public Optional<BufferedImage> loadBufferedImage(final String path) {
     Ensure.notBlank(path);
 
