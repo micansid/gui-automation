@@ -23,7 +23,7 @@ public interface ImagePositionFinder {
    * @param image   to search in
    * @param pattern which should be found in the image
    * @return Position where the pattern is located in the image or an empty Optional if the pattern
-   * is not in the image.
+   *         is not in the image.
    */
   Optional<Position> find(Image image, Image pattern);
 
@@ -33,7 +33,7 @@ public interface ImagePositionFinder {
    * @param image   to search in
    * @param pattern which should be found in the image
    * @return sorted list of all ScreenPositions of the pattern or an empty list if the pattern is
-   * not in the image.
+   *         not in the image.
    */
   List<Position> findAll(Image image, Image pattern);
 
@@ -43,7 +43,7 @@ public interface ImagePositionFinder {
    * @param image    to search in
    * @param patterns set of pattern which should be found in the image
    * @return a mapping of the pattern an a list of the ScreenPositions. If a pattern is not in the
-   * image, then is the list empty.
+   *         image, then is the list empty.
    */
   default Map<Image, List<Position>> findAll(Image image, Set<Image> patterns) {
     Ensure.notNull(image);
