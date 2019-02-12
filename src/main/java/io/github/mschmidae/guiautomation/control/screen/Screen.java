@@ -26,6 +26,7 @@ public class Screen implements Supplier<Image> {
     this(new SimpleFinder(), screenSupplier);
   }
 
+
   /**
    * Constructor which injects the dependencies of a Screen.
    * @param finder instance of a ImagePositionFinder to find a sub image in an image
@@ -39,10 +40,11 @@ public class Screen implements Supplier<Image> {
     this.screenSupplier = screenSupplier;
   }
 
+
   /**
    * Find the first position of the pattern image on the screen.
    * @param supplier of the pattern image
-   * @return first Position of the pattern image or an empty optional if the pattern image isn't
+   * @return first position of the pattern image or an empty optional if the pattern image isn't
    *         present.
    */
   public Optional<Position> positionOf(final Supplier<Image> supplier) {
@@ -51,11 +53,12 @@ public class Screen implements Supplier<Image> {
     return getFinder().find(screen, supplier.get());
   }
 
+
   /**
    * Find the first position of the pattern image in the section on the screen.
    * @param supplier of the pattern image
    * @param section which should contain the pattern image
-   * @return first Position of the pattern image or an empty optional if the pattern image isn't
+   * @return first position of the pattern image or an empty optional if the pattern image isn't
    *         present in the section.
    */
   public Optional<Position> positionOf(final Supplier<Image> supplier, final Section section) {
@@ -67,12 +70,13 @@ public class Screen implements Supplier<Image> {
         .map(section::scaleUpPosition);
   }
 
+
   /**
-   * Find the first Position of the first present pattern image on the screen.
+   * Find the first position of the first present pattern image on the screen.
    * @param suppliers list of pattern image suppliers. The order of the list represents the priority
    *                  of the pattern image supplier. The entry with index 0 has the highest
    *                  priority.
-   * @return first Position of the pattern image or an empty optional if the pattern image isn't
+   * @return first position of the pattern image or an empty optional if the pattern image isn't
    *         present.
    */
   public Optional<Position> positionOf(final List<Supplier<Image>> suppliers) {
@@ -86,13 +90,14 @@ public class Screen implements Supplier<Image> {
         .findFirst();
   }
 
+
   /**
-   * Find the first Position of the first present pattern image in the section on the screen.
+   * Find the first position of the first present pattern image in the section on the screen.
    * @param suppliers list of pattern image suppliers. The order of the list represents the priority
    *                  of the pattern image supplier. The entry with index 0 has the highest
    *                  priority.
    * @param section which should contain the pattern image
-   * @return first Position of the pattern image or an empty optional if the pattern image isn't
+   * @return first position of the pattern image or an empty optional if the pattern image isn't
    *         present in the section.
    */
   public Optional<Position> positionOf(final List<Supplier<Image>> suppliers,
@@ -109,10 +114,11 @@ public class Screen implements Supplier<Image> {
         .map(section::scaleUpPosition);
   }
 
+
   /**
    * Find all positions of the pattern image on the screen.
    * @param supplier of the pattern image
-   * @return list of all Positions of the pattern image or an empty list if the pattern image isn't
+   * @return list of all positions of the pattern image or an empty list if the pattern image isn't
    *         present.
    */
   public List<Position> positionsOf(final Supplier<Image> supplier) {
@@ -122,11 +128,12 @@ public class Screen implements Supplier<Image> {
     return getFinder().findAll(screen, supplier.get());
   }
 
+
   /**
    * Find all positions of the pattern image in the section on the screen.
    * @param supplier of the pattern image
    * @param section which should contain the pattern image
-   * @return list of all Positions of the pattern image or an empty list if the pattern image isn't
+   * @return list of all positions of the pattern image or an empty list if the pattern image isn't
    *         present in the section.
    */
   public List<Position> positionsOf(final Supplier<Image> supplier, final Section section) {
@@ -139,6 +146,7 @@ public class Screen implements Supplier<Image> {
         .map(section::scaleUpPosition)
         .collect(Collectors.toList());
   }
+
 
   /**
    * Find all positions of all pattern images on the screen.
@@ -154,6 +162,7 @@ public class Screen implements Supplier<Image> {
     Image screen = getScreenSupplier().get();
     return getFinder().findAll(screen, images);
   }
+
 
   /**
    * Find all positions of all pattern images in the section on the screen.
@@ -179,11 +188,25 @@ public class Screen implements Supplier<Image> {
   }
 
 
+  /**
+   * Find the first click position of the pattern image on the screen.
+   * @param supplier of the pattern image
+   * @return first click position of the pattern image or an empty optional if the pattern image
+   *         isn't present.
+   */
   public Optional<Position> clickPositionOf(final Supplier<Image> supplier) {
     Ensure.suppliesNotNull(supplier);
     return positionOf(supplier).map(position -> position.addSubPosition(supplier.get().middle()));
   }
 
+
+  /**
+   * Find the first click position of the pattern image in the section on the screen.
+   * @param supplier of the pattern image
+   * @param section which should contain the pattern image
+   * @return first click position of the pattern image or an empty optional if the pattern image
+   *         isn't present in the section.
+   */
   public Optional<Position> clickPositionOf(final Supplier<Image> supplier, final Section section) {
     Ensure.suppliesNotNull(supplier);
     Ensure.notNull(section);
@@ -191,6 +214,15 @@ public class Screen implements Supplier<Image> {
         .map(position -> position.addSubPosition(supplier.get().middle()));
   }
 
+
+  /**
+   * Find the first click position of the first present pattern image on the screen.
+   * @param suppliers list of pattern image suppliers. The order of the list represents the priority
+   *                  of the pattern image supplier. The entry with index 0 has the highest
+   *                  priority.
+   * @return first click position of the pattern image or an empty optional if the pattern image
+   *         isn't present.
+   */
   public Optional<Position> clickPositionOf(final List<Supplier<Image>> suppliers) {
     Ensure.notNull(suppliers);
     suppliers.forEach(Ensure::suppliesNotNull);
@@ -202,6 +234,15 @@ public class Screen implements Supplier<Image> {
   }
 
 
+  /**
+   * Find the first click position of the first present pattern image in the section on the screen.
+   * @param suppliers list of pattern image suppliers. The order of the list represents the priority
+   *                  of the pattern image supplier. The entry with index 0 has the highest
+   *                  priority.
+   * @param section which should contain the pattern image
+   * @return first click position of the pattern image or an empty optional if the pattern image
+   *         isn't present in the section.
+   */
   public Optional<Position> clickPositionOf(final List<Supplier<Image>> suppliers,
                                             final Section section) {
     Ensure.notNull(suppliers);
@@ -215,6 +256,12 @@ public class Screen implements Supplier<Image> {
   }
 
 
+  /**
+   * Find all click positions of the pattern image on the screen.
+   * @param supplier of the pattern image
+   * @return list of all click positions of the pattern image or an empty list if the pattern image
+   *         isn't present.
+   */
   public List<Position> clickPositionsOf(final Supplier<Image> supplier) {
     Ensure.suppliesNotNull(supplier);
     return positionsOf(supplier).stream()
@@ -222,6 +269,14 @@ public class Screen implements Supplier<Image> {
         .collect(Collectors.toList());
   }
 
+
+  /**
+   * Find all click positions of the pattern image in the section on the screen.
+   * @param supplier of the pattern image
+   * @param section which should contain the pattern image
+   * @return list of all click positions of the pattern image or an empty list if the pattern image
+   *         isn't present in the section.
+   */
   public List<Position> clickPositionsOf(final Supplier<Image> supplier, final Section section) {
     Ensure.suppliesNotNull(supplier);
     Ensure.notNull(section);
@@ -232,6 +287,12 @@ public class Screen implements Supplier<Image> {
   }
 
 
+  /**
+   * Find all click positions of all pattern images on the screen.
+   * @param suppliers set of pattern image suppliers
+   * @return map of all pattern images as key and the list of click positions as value. When the
+   *         pattern isn't present the value is an empty list
+   */
   public Map<Image, List<Position>> clickPositionsOf(final Set<Supplier<Image>> suppliers) {
     Ensure.containsNoNull(suppliers);
     suppliers.forEach(Ensure::suppliesNotNull);
@@ -243,6 +304,13 @@ public class Screen implements Supplier<Image> {
   }
 
 
+  /**
+   * Find all click positions of all pattern images in the section on the screen.
+   * @param suppliers set of pattern image suppliers
+   * @param section which should contain the pattern image
+   * @return map of all pattern images as key and the list of click positions as value. When the
+   *         pattern isn't present in the section the value is an empty list
+   */
   public Map<Image, List<Position>> clickPositionsOf(final Set<Supplier<Image>> suppliers,
                                                      final Section section) {
     Ensure.containsNoNull(suppliers);
@@ -256,6 +324,12 @@ public class Screen implements Supplier<Image> {
   }
 
 
+  /**
+   * Verify if the pattern image is present at this position on the screen.
+   * @param supplier of the pattern image
+   * @param position where the pattern image should be
+   * @return true if the pattern image is at this position, else false
+   */
   public boolean imageAt(final Supplier<Image> supplier, final Position position) {
     Ensure.suppliesNotNull(supplier);
     Ensure.notNull(position);
@@ -264,11 +338,21 @@ public class Screen implements Supplier<Image> {
     return getFinder().at(screen, supplier.get(), position);
   }
 
-  public int getWidth() {
+
+  /**
+   * Width of the screen.
+   * @return width of the screen in pixel
+   */
+  public int width() {
     return getScreenSupplier().get().getWidth();
   }
 
-  public int getHeight() {
+
+  /**
+   * Height of the screen.
+   * @return height of the screen in pixel
+   */
+  public int height() {
     return getScreenSupplier().get().getHeight();
   }
 

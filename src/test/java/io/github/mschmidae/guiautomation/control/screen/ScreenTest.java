@@ -264,7 +264,7 @@ class ScreenTest {
   @Test
   void heightAndWidthOfTheScreenImageSupplier() {
     Screen sut = new Screen(FinderTestData.SCREEN);
-    assertThat(sut.getWidth()).isEqualTo(771);
-    assertThat(sut.getHeight()).isEqualTo(827);
+    assertThat(sut.width()).isEqualTo(771);
+    assertThat(sut.height()).isEqualTo(827);
   }
 }
