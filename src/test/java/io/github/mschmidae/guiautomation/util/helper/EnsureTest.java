@@ -120,4 +120,13 @@ class EnsureTest {
         .isInstanceOf(IllegalArgumentException.class);
   }
 
+  @Test
+  void supplierSuppliesNotNull() {
+    Ensure.suppliesNotNull(() -> new Object());
+    assertThatThrownBy(() -> Ensure.suppliesNotNull(null))
+        .isInstanceOf(IllegalArgumentException.class);
+    assertThatThrownBy(() -> Ensure.suppliesNotNull(() -> null))
+        .isInstanceOf(IllegalArgumentException.class);
+  }
+
 }
