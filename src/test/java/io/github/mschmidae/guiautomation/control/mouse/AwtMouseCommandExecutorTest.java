@@ -70,7 +70,7 @@ class AwtMouseCommandExecutorTest {
 
   @Disabled
   @Test
-  void downScoll() throws InterruptedException {
+  void scrollDown() throws InterruptedException {
     MouseCommandExecutor executor = new AwtMouseCommandExecutor();
 
     System.out.println("Test started: Move the mouse to a position to verify a down scroll.");
@@ -78,7 +78,22 @@ class AwtMouseCommandExecutorTest {
     System.out.println("Waiting 10 seconds");
     Thread.sleep(10_000);
 
-    executor.scroll(10);
+    executor.scroll(1);
+
+    System.out.println("Does the test produce the expected result?");
+  }
+
+  @Disabled
+  @Test
+  void scrollUp() throws InterruptedException {
+    MouseCommandExecutor executor = new AwtMouseCommandExecutor();
+
+    System.out.println("Test started: Move the mouse to a position to verify a down scroll.");
+
+    System.out.println("Waiting 10 seconds");
+    Thread.sleep(10_000);
+
+    executor.scroll(-1);
 
     System.out.println("Does the test produce the expected result?");
   }
