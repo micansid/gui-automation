@@ -3,11 +3,18 @@ package io.github.mschmidae.guiautomation.control.mouse;
 import io.github.mschmidae.guiautomation.util.Position;
 import io.github.mschmidae.guiautomation.util.helper.Ensure;
 import java.util.function.Supplier;
+import lombok.AccessLevel;
+import lombok.Getter;
+import lombok.Setter;
+import lombok.experimental.Accessors;
 
+@Getter(AccessLevel.PRIVATE)
+@Setter(AccessLevel.PRIVATE)
 public class Mouse {
   private final MouseCommandExecutor executor;
   private final Supplier<Position> positionSupplier;
 
+  @Getter
   private Position lastMovePosition;
 
 
@@ -178,21 +185,5 @@ public class Mouse {
 
   public Position currentPosition() {
     return getPositionSupplier().get();
-  }
-
-  private Supplier<Position> getPositionSupplier() {
-    return positionSupplier;
-  }
-
-  private MouseCommandExecutor getExecutor() {
-    return executor;
-  }
-
-  public Position getLastMovePosition() {
-    return lastMovePosition;
-  }
-
-  private void setLastMovePosition(Position lastMovePosition) {
-    this.lastMovePosition = lastMovePosition;
   }
 }

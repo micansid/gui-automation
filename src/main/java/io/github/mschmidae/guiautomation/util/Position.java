@@ -1,10 +1,15 @@
 package io.github.mschmidae.guiautomation.util;
 
 import io.github.mschmidae.guiautomation.util.helper.Ensure;
+import lombok.AccessLevel;
+import lombok.EqualsAndHashCode;
+import lombok.Getter;
 
 /**
  * Representation of a Position on a screen.
  */
+@EqualsAndHashCode
+@Getter
 public class Position implements Comparable<Position> {
   private final int x;
   private final int y;
@@ -61,37 +66,5 @@ public class Position implements Comparable<Position> {
   @Override
   public String toString() {
     return "Position(" + getX() + "|" + getY() + ")";
-  }
-
-  public int getX() {
-    return x;
-  }
-
-  public int getY() {
-    return y;
-  }
-
-  @Override
-  public boolean equals(Object o) {
-    if (this == o) {
-      return true;
-    }
-    if (o == null || getClass() != o.getClass()) {
-      return false;
-    }
-
-    Position that = (Position) o;
-
-    if (x != that.x) {
-      return false;
-    }
-    return y == that.y;
-  }
-
-  @Override
-  public int hashCode() {
-    int result = x;
-    result = 31 * result + y;
-    return result;
   }
 }
