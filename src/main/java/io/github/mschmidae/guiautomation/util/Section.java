@@ -18,6 +18,7 @@ public class Section {
    */
   private final Position endPosition;
 
+
   /**
    * Constructs a Section based on the two ScreenPositions.
    *
@@ -34,9 +35,9 @@ public class Section {
     this.endPosition = endPosition;
   }
 
+
   /**
    * Constructs a Section based on the left upper bound, the width and the height.
-   *
    * @param startPosition left upper bound
    * @param width         of the section, have to be greater than 0
    * @param height        of the section, have to be greater than 0
@@ -51,10 +52,10 @@ public class Section {
         startPosition.getY() + height - 1);
   }
 
+
   /**
    * Calculates the Position of the given sub position. The start position of the section is set
    * as origin.
-   *
    * @param position to scale up
    * @return the position out of the section
    */
@@ -65,6 +66,20 @@ public class Section {
 
     return new Position(getStartPosition().getX() + position.getX(),
         getStartPosition().getY() + position.getY());
+  }
+
+
+  /**
+   * Verify if the section contains the position.
+   * @param position to verify
+   * @return true if the section contains the position, else false
+   */
+  public boolean contains(final Position position) {
+    Ensure.notNull(position);
+    return position.getX() >= getStartPosition().getX()
+        && position.getX() <= getEndPosition().getX()
+        && position.getY() >= getStartPosition().getY()
+        && position.getY() <= getEndPosition().getY();
   }
 
   public int getWidth() {

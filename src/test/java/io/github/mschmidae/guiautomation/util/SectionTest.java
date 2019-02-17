@@ -48,4 +48,45 @@ class SectionTest {
     assertThat(sut.getWidth()).isEqualTo(1);
     assertThat(sut.getHeight()).isEqualTo(1);
   }
+
+  @Test
+  void containsCornerPositionsOfSection() {
+    Position leftTop = new Position(1, 1);
+    Position leftBottom = new Position(1, 3);
+    Position rightTop = new Position(3, 1);
+    Position rightBottom = new Position(3, 3);
+
+    Section sut = new Section(leftTop, rightBottom);
+
+    assertThat(sut.contains(leftTop)).isTrue();
+    assertThat(sut.contains(leftBottom)).isTrue();
+    assertThat(sut.contains(rightTop)).isTrue();
+    assertThat(sut.contains(rightBottom)).isTrue();
+  }
+
+  @Test
+  void containsNotOuterNeighboursOfCornerPositions() {
+    Position leftTop = new Position(1, 1);
+    Position leftBottom = new Position(1, 3);
+    Position rightTop = new Position(3, 1);
+    Position rightBottom = new Position(3, 3);
+
+    Section sut = new Section(leftTop, rightBottom);
+
+    assertThat(sut.contains(leftTop.move(-1, 0 ))).isFalse();
+    assertThat(sut.contains(leftTop.move(0, -1 ))).isFalse();
+    assertThat(sut.contains(leftBottom.move(-1, 0))).isFalse();
+    assertThat(sut.contains(leftBottom.move(0, 1))).isFalse();
+
+    assertThat(sut.contains(rightTop.move(1, 0))).isFalse();
+    assertThat(sut.contains(rightTop.move(0, -1))).isFalse();
+    assertThat(sut.contains(rightBottom.move(1, 0))).isFalse();
+    assertThat(sut.contains(rightBottom.move(0, 1))).isFalse();
+  }
+
+  @Test
+  void containsThrowsExceptionAtNullParameter() {
+    Section sut = new Section(new Position(1, 1), 1, 1);
+    assertThatThrownBy(() -> sut.contains(null)).isInstanceOf(IllegalArgumentException.class);
+  }
 }
