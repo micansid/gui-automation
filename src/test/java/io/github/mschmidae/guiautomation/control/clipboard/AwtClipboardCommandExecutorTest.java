@@ -2,6 +2,7 @@ package io.github.mschmidae.guiautomation.control.clipboard;
 
 import io.github.mschmidae.guiautomation.control.keyboard.Key;
 import io.github.mschmidae.guiautomation.control.keyboard.Keyboard;
+import io.github.mschmidae.guiautomation.control.keyboard.Shortcut;
 import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.Test;
 
@@ -37,9 +38,7 @@ class AwtClipboardCommandExecutorTest {
     System.out.println("Test started: Move the cursor to a text field");
     System.out.println("Waiting 10 seconds");
     Thread.sleep(10_000);
-    keyboard.press(Key.CONTROL);
-    keyboard.input(Key.V);
-    keyboard.release(Key.CONTROL);
+    keyboard.execute(Shortcut.PASTE);
     System.out.println("Is the inserted text \"TEST\"?");
   }
 
@@ -51,9 +50,7 @@ class AwtClipboardCommandExecutorTest {
     System.out.println("Test started: Mark some text");
     System.out.println("Waiting 10 seconds");
     Thread.sleep(10_000);
-    keyboard.press(Key.CONTROL);
-    keyboard.input(Key.C);
-    keyboard.release(Key.CONTROL);
+    keyboard.execute(Shortcut.COPY);
     System.out.println(clipboard.get().get());
     System.out.println("Is the printed text equal to marked?");
   }
