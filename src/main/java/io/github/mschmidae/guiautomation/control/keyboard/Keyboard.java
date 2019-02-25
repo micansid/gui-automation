@@ -8,6 +8,7 @@ import lombok.Getter;
 @Getter(AccessLevel.PRIVATE)
 public class Keyboard {
   private final KeyboardCommandExecutor executor;
+  private final CharacterKeyMapping characterKeyMapping = new CharacterKeyMapping();
 
   public Keyboard() {
     this(new AwtKeyboardCommandExecutor());
@@ -33,6 +34,13 @@ public class Keyboard {
   public Keyboard input(final Key key) {
     Ensure.notNull(key);
     return press(key).release(key);
+  }
+
+  public Keyboard type(final String text) {
+    Ensure.notNull(text);
+    CharacterKeyMapping mapping = getCharacterKeyMapping();
+    text.chars().mapToObj(mapping::map).forEach(this::execute);
+    return this;
   }
 
   public Keyboard execute(final Consumer<Keyboard> shortcut) {

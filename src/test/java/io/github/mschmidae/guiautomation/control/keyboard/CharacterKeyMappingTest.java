@@ -8,10 +8,10 @@ import org.junit.jupiter.api.Test;
 
 class CharacterKeyMappingTest {
   @Test
-  void shortcutReleasesAllPressedKeys() {
+  void characterKeyMappingReleasesAllPressedKeys() {
     CharacterKeyMapping sut = new CharacterKeyMapping();
     SoftAssertions softly = new SoftAssertions();
-    for (Character character : sut.getCharacterKeyMapping().keySet()) {
+    for (Integer character : sut.getCharacterKeyMapping().keySet()) {
       CountingKeyboardCommandExecutorStub executor =
           new CountingKeyboardCommandExecutorStub(character);
       Keyboard keyboard = new Keyboard(executor);
