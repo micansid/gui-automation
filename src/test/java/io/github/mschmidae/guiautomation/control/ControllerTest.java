@@ -5,13 +5,20 @@ import io.github.mschmidae.guiautomation.control.keyboard.Key;
 import io.github.mschmidae.guiautomation.control.keyboard.Keyboard;
 import io.github.mschmidae.guiautomation.control.keyboard.KeyboardCommandExecutor;
 import io.github.mschmidae.guiautomation.control.mouse.Mouse;
+import io.github.mschmidae.guiautomation.control.mouse.MouseButton;
+import io.github.mschmidae.guiautomation.control.mouse.MouseCommandExecutor;
 import io.github.mschmidae.guiautomation.control.screen.Screen;
+import io.github.mschmidae.guiautomation.util.Position;
+import io.github.mschmidae.guiautomation.util.image.Image;
 import java.util.Optional;
+import java.util.function.Supplier;
+import javafx.geometry.Pos;
 import org.junit.jupiter.api.Test;
 import org.mockito.InOrder;
 
 
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.inOrder;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.times;
@@ -58,4 +65,55 @@ class ControllerTest {
     verifyNoMoreInteractions(executor, clipboard);
   }
 
+  @Test
+  void clickExistingButton() {
+    Position clickPosition = new Position(2, 3);
+    MouseCommandExecutor executor = mock(MouseCommandExecutor.class);
+    Mouse mouse = new Mouse(executor, () -> clickPosition);
+    Screen screen = mock(Screen.class);
+
+    when(screen.clickPositionOf(any(Supplier.class))).thenReturn(Optional.of(clickPosition));
+    Controller sut = new Controller(mock(Clipboard.class), mock(Keyboard.class), mouse, screen);
+
+    Optional<Position> result = sut.clickButton(() -> new Image(new int[]{0}, 1, 1));
+
+    assertThat(result).isPresent().contains(clickPosition);
+    InOrder inOrder = inOrder(executor);
+    inOrder.verify(executor).move(clickPosition.getX(), clickPosition.getY());
+    inOrder.verify(executor).press(MouseButton.LEFT);
+    inOrder.verify(executor).release(MouseButton.LEFT);
+    verifyNoMoreInteractions(executor);
+  }
+
+  @Test
+  void clickButtonMoveFailed() {
+    Position clickPosition = new Position(2, 3);
+    MouseCommandExecutor executor = mock(MouseCommandExecutor.class);
+    Mouse mouse = new Mouse(executor, () -> new Position(3, 4));
+    Screen screen = mock(Screen.class);
+
+    when(screen.clickPositionOf(any(Supplier.class))).thenReturn(Optional.of(clickPosition));
+    Controller sut = new Controller(mock(Clipboard.class), mock(Keyboard.class), mouse, screen);
+
+    Optional<Position> result = sut.clickButton(() -> new Image(new int[]{0}, 1, 1));
+
+    assertThat(result).isEmpty();
+    InOrder inOrder = inOrder(executor);
+    inOrder.verify(executor).move(clickPosition.getX(), clickPosition.getY());
+    verifyNoMoreInteractions(executor);
+  }
+
+  @Test
+  void clickButtonPositionDetectionFailed() {
+    MouseCommandExecutor executor = mock(MouseCommandExecutor.class);
+    Mouse mouse = new Mouse(executor, () -> new Position(0, 0));
+    Screen screen = mock(Screen.class);
+
+    Controller sut = new Controller(mock(Clipboard.class), mock(Keyboard.class), mouse, screen);
+
+    Optional<Position> result = sut.clickButton(() -> new Image(new int[]{0}, 1, 1));
+
+    assertThat(result).isEmpty();
+    verifyNoMoreInteractions(executor);
+  }
 }

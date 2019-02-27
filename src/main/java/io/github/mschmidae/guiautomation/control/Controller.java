@@ -6,8 +6,11 @@ import io.github.mschmidae.guiautomation.control.keyboard.Shortcut;
 import io.github.mschmidae.guiautomation.control.mouse.Mouse;
 import io.github.mschmidae.guiautomation.control.screen.Screen;
 import io.github.mschmidae.guiautomation.control.screen.ScreenObserver;
+import io.github.mschmidae.guiautomation.util.Position;
 import io.github.mschmidae.guiautomation.util.helper.Ensure;
+import io.github.mschmidae.guiautomation.util.image.Image;
 import java.util.Optional;
+import java.util.function.Supplier;
 import lombok.AccessLevel;
 import lombok.Getter;
 
@@ -45,6 +48,19 @@ public class Controller {
   public Optional<String> copyText() {
     keyboard().execute(Shortcut.COPY);
     return clipboard().get();
+  }
+
+  public Optional<Position> clickButton(final Supplier<Image> patternSupplier) {
+    Optional<Position> clickPosition = screen().clickPositionOf(patternSupplier);
+    if (clickPosition.isPresent()) {
+      mouse().move(clickPosition.get());
+      if (clickPosition.get().equals(mouse().currentPosition())) {
+        mouse.leftClick();
+      } else {
+        clickPosition = Optional.empty();
+      }
+    }
+    return clickPosition;
   }
 
   public Clipboard clipboard() {
