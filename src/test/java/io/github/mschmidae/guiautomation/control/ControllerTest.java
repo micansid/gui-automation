@@ -12,7 +12,6 @@ import io.github.mschmidae.guiautomation.util.Position;
 import io.github.mschmidae.guiautomation.util.image.Image;
 import java.util.Optional;
 import java.util.function.Supplier;
-import javafx.geometry.Pos;
 import org.junit.jupiter.api.Test;
 import org.mockito.InOrder;
 
