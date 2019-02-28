@@ -21,17 +21,16 @@ class Windows10IntegrationTest {
 
     keyboard.press(Key.WINDOWS).input(Key.R).release(Key.WINDOWS);
     Thread.sleep(SLEEP_TIME);
-    keyboard.input(Key.N).input(Key.O).input(Key.T).input(Key.E)
-        .input(Key.P).input(Key.A).input(Key.D).input(Key.ENTER);
+    keyboard.type("notepad").input(Key.ENTER);
 
     Thread.sleep(SLEEP_TIME);
     keyboard.press(Key.SHIFT).input(Key.NUM_8).release(Key.SHIFT)
-        .input(Key.A).press(Key.SHIFT).input(Key.A).release(Key.SHIFT)
-        .input(Key.B).press(Key.SHIFT).input(Key.B).release(Key.SHIFT)
+        .type("aAbB")
         .press(Key.SHIFT).input(Key.NUM_9).release(Key.SHIFT);
 
     Thread.sleep(SLEEP_TIME);
     keyboard.execute(Shortcut.MARK_ALL).execute(Shortcut.COPY);
+    Thread.sleep(SLEEP_TIME);
     keyboard.execute(Shortcut.CLOSE).input(Key.TAB).input(Key.ENTER);
 
     assertThat(clipboard.get()).isPresent().contains("(aAbB)");
@@ -44,28 +43,20 @@ class Windows10IntegrationTest {
 
     keyboard.press(Key.WINDOWS).input(Key.R).release(Key.WINDOWS);
     Thread.sleep(SLEEP_TIME);
-    keyboard.input(Key.N).input(Key.O).input(Key.T).input(Key.E)
-        .input(Key.P).input(Key.A).input(Key.D).input(Key.ENTER);
-
+    keyboard.type("notepad").input(Key.ENTER);
 
     Thread.sleep(SLEEP_TIME);
     clipboard.set("TEST");
     keyboard.execute(Shortcut.PASTE);
 
     Thread.sleep(SLEEP_TIME);
-    //keyboard.input(Key.HOME).input(Key.BEGIN).press(Key.SHIFT).input(Key.NUM_8).release(Key.SHIFT);
+    keyboard.input(Key.HOME).press(Key.SHIFT).input(Key.NUM_8).release(Key.SHIFT);
     keyboard.input(Key.END).press(Key.SHIFT).input(Key.NUM_9).release(Key.SHIFT);
-    /*
-    keyboard.press(Key.SHIFT).input(Key.NUM_8).release(Key.SHIFT)
-        .input(Key.A).press(Key.SHIFT).input(Key.A).release(Key.SHIFT)
-        .input(Key.B).press(Key.SHIFT).input(Key.B).release(Key.SHIFT)
-        .press(Key.SHIFT).input(Key.NUM_9).release(Key.SHIFT);
-*/
 
     Thread.sleep(SLEEP_TIME);
     keyboard.execute(Shortcut.MARK_ALL).execute(Shortcut.COPY);
+    Thread.sleep(SLEEP_TIME);
     keyboard.execute(Shortcut.CLOSE).input(Key.TAB).input(Key.ENTER);
-
-    assertThat(clipboard.get()).isPresent().contains("TEST)");
+    assertThat(clipboard.get()).isPresent().contains("(TEST)");
   }
 }
