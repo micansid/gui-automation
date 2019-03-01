@@ -20,9 +20,10 @@ public class ScreenObserver extends AbstractObserver {
   public static final int DEFAULT_REFRESH_INTERVAL = 1_000;
 
   private final Screen screen;
-  private final Supplier<Long> clock;
   private final int refreshInterval;
   private final ExecutorService executor = Executors.newCachedThreadPool();
+  @Getter(AccessLevel.PUBLIC)
+  private final Supplier<Long> clock;
 
   public ScreenObserver(final Screen screen) {
     this(screen, System::currentTimeMillis, DEFAULT_REFRESH_INTERVAL);
