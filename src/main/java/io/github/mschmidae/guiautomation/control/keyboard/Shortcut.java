@@ -9,6 +9,8 @@ import lombok.Getter;
 public enum Shortcut implements Consumer<Keyboard> {
   // ALT + ...
   ALT_F4(kb -> kb.press(Key.ALT).input(Key.F4).release(Key.ALT)),
+  ALT_TAB(kb -> kb.press(Key.ALT).input(Key.TAB).release(Key.ALT)),
+
   ALT_A(kb -> kb.press(Key.ALT).input(Key.A).release(Key.ALT)),
   ALT_B(kb -> kb.press(Key.ALT).input(Key.B).release(Key.ALT)),
   ALT_C(kb -> kb.press(Key.ALT).input(Key.C).release(Key.ALT)),
