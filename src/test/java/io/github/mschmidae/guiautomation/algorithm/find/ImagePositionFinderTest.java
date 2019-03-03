@@ -12,7 +12,11 @@ import static org.assertj.core.api.Assertions.assertThat;
 
 class ImagePositionFinderTest {
   private static Stream<ImagePositionFinder> finderProvider() {
-    return Stream.of(new SimpleFinder(), new SimpleFinderStream());
+    return Stream.of(
+        new SimpleFinder(),
+        new SimpleFinderStream(),
+        new BadCharacterFinder(),
+        new ImagePositionFinderBenchmark(new SimpleFinder(), new BadCharacterFinder()));
   }
 
   @ParameterizedTest
