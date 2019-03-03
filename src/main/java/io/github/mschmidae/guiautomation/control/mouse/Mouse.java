@@ -7,6 +7,8 @@ import lombok.AccessLevel;
 import lombok.Getter;
 import lombok.Setter;
 import lombok.experimental.Accessors;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 @Getter(AccessLevel.PRIVATE)
 @Setter(AccessLevel.PRIVATE)
@@ -16,6 +18,8 @@ public class Mouse {
 
   @Getter
   private Position lastMovePosition;
+
+  private final Logger logger = LoggerFactory.getLogger(getClass());
 
 
   public Mouse() {
@@ -43,6 +47,7 @@ public class Mouse {
    */
   public Mouse move(final Position position) {
     Ensure.notNull(position);
+    getLogger().debug("move mouse to: " + position);
     getExecutor().move(position.getX(), position.getY());
     setLastMovePosition(position);
     return this;
@@ -104,6 +109,7 @@ public class Mouse {
    */
   public Mouse click(final MouseButton button) {
     Ensure.notNull(button);
+    getLogger().debug("click button: " + button);
     getExecutor().press(button);
     getExecutor().release(button);
     return this;
@@ -153,6 +159,7 @@ public class Mouse {
    */
   public Mouse dragAndDrop(final Position position) {
     Ensure.notNull(position);
+    getLogger().debug("drag and drop from " + getPositionSupplier().get() + " to " + position);
     getExecutor().press(MouseButton.LEFT);
     getExecutor().move(position.getX(), position.getY());
     getExecutor().release(MouseButton.LEFT);
@@ -167,6 +174,7 @@ public class Mouse {
    */
   public Mouse scrollDown(final int notches) {
     Ensure.notNegative(notches);
+    getLogger().debug("scroll down " + notches + " notches");
     getExecutor().scroll(notches);
     return this;
   }
@@ -179,6 +187,7 @@ public class Mouse {
    */
   public Mouse scrollUp(final int notches) {
     Ensure.notNegative(notches);
+    getLogger().debug("scroll up " + notches + " notches");
     getExecutor().scroll(-notches);
     return this;
   }
