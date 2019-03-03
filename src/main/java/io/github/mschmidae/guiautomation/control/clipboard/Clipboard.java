@@ -6,11 +6,15 @@ import java.util.function.Consumer;
 import java.util.function.Supplier;
 import lombok.AccessLevel;
 import lombok.Getter;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 @Getter(AccessLevel.PRIVATE)
 public class Clipboard {
   private final Supplier<Optional<String>> getter;
   private final Consumer<String> setter;
+
+  private final Logger logger = LoggerFactory.getLogger(getClass());
 
   public Clipboard(final Supplier<Optional<String>> getter, final Consumer<String> setter) {
     Ensure.notNull(getter);
@@ -29,10 +33,13 @@ public class Clipboard {
 
   public void set(final String data) {
     Ensure.notNull(data);
+    getLogger().debug("set clipboard content to: " + data);
     getSetter().accept(data);
   }
 
   public Optional<String> get() {
-    return getGetter().get();
+    Optional<String> result = getGetter().get();
+    getLogger().debug("get clipboard content: " + result);
+    return result;
   }
 }
