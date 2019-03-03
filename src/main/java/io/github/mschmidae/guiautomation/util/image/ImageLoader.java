@@ -3,8 +3,8 @@ package io.github.mschmidae.guiautomation.util.image;
 import io.github.mschmidae.guiautomation.util.helper.Ensure;
 
 import java.awt.image.BufferedImage;
-import java.io.File;
 import java.io.IOException;
+import java.io.InputStream;
 import java.util.Optional;
 import javax.imageio.ImageIO;
 
@@ -20,8 +20,8 @@ public class ImageLoader {
     Optional<BufferedImage> result = Optional.empty();
 
     try {
-      BufferedImage bufferedImage = ImageIO.read(new File(ClassLoader.getSystemClassLoader()
-          .getResource(path).getFile()));
+      InputStream inputStream = getClass().getResourceAsStream("/" + path);
+      BufferedImage bufferedImage = ImageIO.read(inputStream);
       result = Optional.of(bufferedImage);
 
     } catch (IOException | NullPointerException exception) {
