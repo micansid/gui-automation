@@ -190,7 +190,7 @@ public class Image implements Supplier<Image> {
 
   private List<Integer> getLine(final BiFunction<Integer, Integer, Integer> getter, final int y) {
     Ensure.notNegative(y);
-    Ensure.smaller(y, getWidth());
+    Ensure.smaller(y, getHeight());
 
     List<Integer> result = new ArrayList<>();
     for (int index = 0; index < getWidth(); index++) {
@@ -202,7 +202,7 @@ public class Image implements Supplier<Image> {
 
   private List<Integer> getColumn(final BiFunction<Integer, Integer, Integer> getter, final int x) {
     Ensure.notNegative(x);
-    Ensure.smaller(x, getHeight());
+    Ensure.smaller(x, getWidth());
 
     List<Integer> result = new ArrayList<>();
     for (int index = 0; index < getHeight(); index++) {

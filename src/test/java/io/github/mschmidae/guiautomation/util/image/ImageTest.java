@@ -116,9 +116,21 @@ class ImageTest {
   }
 
   @Test
+  void rgbLineMatchesTheLineInTheImageNotQuadratic() {
+    Image sut = new Image(new int[]{1, 2, 3, 4, 5, 6, 7, 8}, 4, 2);
+    assertThat(sut.getRgbLine(1)).containsExactly(5, 6, 7, 8);
+  }
+
+  @Test
   void rgbColumnMatchesTheColumnInTheImage() {
     Image sut = new Image(new int[]{1, 2, 3, 4, 5, 6, 7, 8, 9}, 3, 3);
     assertThat(sut.getRgbColumn(1)).containsExactly(2, 5, 8);
+  }
+
+  @Test
+  void rgbColumnMatchesTheColumnInTheImageNotQuadratic() {
+    Image sut = new Image(new int[]{1, 2, 3, 4, 5, 6, 7, 8}, 2, 4);
+    assertThat(sut.getRgbColumn(1)).containsExactly(2, 4, 6, 8);
   }
 
   @Test
