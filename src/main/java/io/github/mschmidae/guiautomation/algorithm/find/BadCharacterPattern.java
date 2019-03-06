@@ -73,27 +73,16 @@ public class BadCharacterPattern {
     public int compareTo(PatternLine patternLine) {
       Ensure.notNull(patternLine);
 
-      int result = 0;
-      if (getTransparentOffset() == 0 && patternLine.getTransparentOffset() != 0) {
+      int result;
+      if (getTransparentOffset() == 0 && patternLine.getTransparentOffset() == 0) {
+        return 0;
+      } else if (getTransparentOffset() == 0 && patternLine.getTransparentOffset() != 0) {
         result = -1;
       } else if (getTransparentOffset() != 0 && patternLine.getTransparentOffset() == 0) {
         result = 1;
       } else {
         result = patternLine.getTransparentOffset() - getTransparentOffset();
       }
-/*
-            if (result == 0) {
-                System.out.println(patternLine.getColorDelta());
-                System.out.println(getColorDelta());
-                System.out.println(patternLine.getColorDelta().values());
-                System.out.println(getColorDelta().values());
-                result = patternLine.getColorDelta().values().stream().mapToInt(v -> v).min().getAsInt() - getColorDelta().values().stream().mapToInt(v -> v).max().getAsInt();
-            }
-
-            if (result == 0) {
-                result = patternLine.getDifferentColorCount() - getDifferentColorCount();
-            }
-*/
       return result;
     }
 
