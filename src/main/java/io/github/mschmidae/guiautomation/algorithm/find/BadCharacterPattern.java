@@ -5,6 +5,7 @@ import io.github.mschmidae.guiautomation.util.image.Image;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.HashSet;
+import java.util.List;
 import java.util.Map;
 import java.util.Set;
 import java.util.stream.IntStream;
@@ -107,11 +108,12 @@ public class BadCharacterPattern {
     }
 
     private Map<Integer, Integer> colorDelta(final Image pattern, final int patternLineIndex) {
+      List<Integer> line = pattern.getRgbLine(patternLineIndex);
       HashMap<Integer, Integer> colorDelta = new HashMap<>();
-      for (int x = 0; x < pattern.getWidth(); x++) {
-        colorDelta.put(pattern.getRgb(x, patternLineIndex), pattern.getWidth() - x - 1);
+      for (int x = 0; x < line.size(); x++) {
+        colorDelta.put(line.get(x), line.size() - x - 1);
       }
-      colorDelta.remove(pattern.getRgb(pattern.getWidth() - 1, patternLineIndex));
+      colorDelta.remove(line.get(line.size() - 1));
 
       return Collections.unmodifiableMap(colorDelta);
     }
