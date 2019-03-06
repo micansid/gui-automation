@@ -57,6 +57,12 @@ class ImagePositionFinderTest {
 
   @ParameterizedTest
   @MethodSource("finderProvider")
+  void findPositionOfScreenImage(final ImagePositionFinder finder) {
+    findFirstPositionOf(finder, FinderTestData.SCREEN);
+  }
+
+  @ParameterizedTest
+  @MethodSource("finderProvider")
   void findAllPositionOfCommitButton(final ImagePositionFinder finder) {
     findAllPositionOf(finder, FinderTestData.BUTTON_COMMIT);
   }
