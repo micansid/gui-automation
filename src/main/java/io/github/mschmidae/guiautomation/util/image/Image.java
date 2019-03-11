@@ -6,7 +6,10 @@ import io.github.mschmidae.guiautomation.util.helper.Ensure;
 
 import java.awt.Color;
 import java.awt.image.BufferedImage;
+import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.List;
+import java.util.function.BiFunction;
 import java.util.function.Supplier;
 
 import lombok.AccessLevel;
@@ -74,6 +77,14 @@ public class Image implements Supplier<Image> {
   public int getRgb(final Position position) {
     Ensure.notNull(position);
     return getRgb(position.getX(), position.getY());
+  }
+
+  public List<Integer> getRgbLine(final int y) {
+    return getLine(this::getRgb, y);
+  }
+
+  public List<Integer> getRgbColumn(final int x) {
+    return getColumn(this::getRgb, x);
   }
 
 
@@ -175,6 +186,30 @@ public class Image implements Supplier<Image> {
     Ensure.notNegative(y);
     Ensure.smaller(x, getWidth());
     Ensure.smaller(y, getHeight());
+  }
+
+  private List<Integer> getLine(final BiFunction<Integer, Integer, Integer> getter, final int y) {
+    Ensure.notNegative(y);
+    Ensure.smaller(y, getHeight());
+
+    List<Integer> result = new ArrayList<>();
+    for (int index = 0; index < getWidth(); index++) {
+      result.add(getter.apply(index, y));
+    }
+
+    return result;
+  }
+
+  private List<Integer> getColumn(final BiFunction<Integer, Integer, Integer> getter, final int x) {
+    Ensure.notNegative(x);
+    Ensure.smaller(x, getWidth());
+
+    List<Integer> result = new ArrayList<>();
+    for (int index = 0; index < getHeight(); index++) {
+      result.add(getter.apply(x, index));
+    }
+
+    return result;
   }
 
   @Override

@@ -1,6 +1,7 @@
 package io.github.mschmidae.guiautomation.util.image;
 
 import io.github.mschmidae.guiautomation.util.Position;
+import io.github.mschmidae.guiautomation.util.Section;
 import org.junit.jupiter.api.Test;
 
 import java.awt.*;
@@ -106,5 +107,36 @@ class ImageTest {
   void middleOfOddImageWidthAndHeight() {
     Image sut = new Image(new int[]{0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0}, 3, 5);
     assertThat(sut.middle()).isEqualTo(new Position(1, 2));
+  }
+
+  @Test
+  void rgbLineMatchesTheLineInTheImage() {
+    Image sut = new Image(new int[]{1, 2, 3, 4, 5, 6, 7, 8, 9}, 3, 3);
+    assertThat(sut.getRgbLine(1)).containsExactly(4, 5, 6);
+  }
+
+  @Test
+  void rgbLineMatchesTheLineInTheImageNotQuadratic() {
+    Image sut = new Image(new int[]{1, 2, 3, 4, 5, 6, 7, 8}, 4, 2);
+    assertThat(sut.getRgbLine(1)).containsExactly(5, 6, 7, 8);
+  }
+
+  @Test
+  void rgbColumnMatchesTheColumnInTheImage() {
+    Image sut = new Image(new int[]{1, 2, 3, 4, 5, 6, 7, 8, 9}, 3, 3);
+    assertThat(sut.getRgbColumn(1)).containsExactly(2, 5, 8);
+  }
+
+  @Test
+  void rgbColumnMatchesTheColumnInTheImageNotQuadratic() {
+    Image sut = new Image(new int[]{1, 2, 3, 4, 5, 6, 7, 8}, 2, 4);
+    assertThat(sut.getRgbColumn(1)).containsExactly(2, 4, 6, 8);
+  }
+
+  @Test
+  void subImageTest() {
+    Section section = new Section(new Position(2, 2), 2, 2);
+    Image sut = new Image(new int[]{1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16}, 4, 4);
+    assertThat(sut.getSubImage(section)).isEqualTo(new Image(new int[]{11, 12, 15, 16}, 2, 2));
   }
 }
