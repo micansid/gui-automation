@@ -15,12 +15,25 @@ import lombok.Getter;
 
 public class ActionBuilder {
 
+  /**
+   * Set the precondition witch returns a result.
+   * @param precondition gets a controller an should return a optional result. If the optional is
+   *                     set the precondition is fulfilled.
+   * @param <T> type of the precondition result
+   * @return a ComposedPreconditionFunction object with expects a BiConsumer or a BiFunction to
+   *         handle the result of the precondition.
+   */
   public <T> ComposedPreconditionFunction<T> preconditionWithResult(
       final Function<Controller, Optional<T>> precondition) {
     Ensure.notNull(precondition);
     return new ComposedPrecondition<>(precondition);
   }
 
+  /**
+   * Set the precondition witch has no result.
+   * @param precondition gets a controller an decides if the precondition is fulfilled.
+   * @return a ComposedPreconditionPredicate object with expects a Consumer or a Function as action.
+   */
   public ComposedPreconditionPredicate<Boolean> precondition(
       final Predicate<Controller> precondition) {
     Ensure.notNull(precondition);
@@ -28,17 +41,33 @@ public class ActionBuilder {
         precondition.test(controller) ? Optional.of(true) : Optional.empty());
   }
 
+  /**
+   * Set a precondition witch is always fulfilled.
+   * @return a ComposedPreconditionPredicate object with expects a Consumer or a Function as action.
+   */
   public ComposedPreconditionPredicate<Boolean> emptyPrecondition() {
     return precondition(controller -> true);
   }
 
+  /**
+   * Set a precondition witch is always fulfilled and returns a parameter to the action.
+   * @param parameterSupplier supplies the action parameter
+   * @param <T> type of the precondition result
+   * @return a ComposedPreconditionFunction object with expects a BiConsumer or a BiFunction to
+   *         handle the returned parameter.
+   */
   public <T> ComposedPreconditionFunction<T> emptyPreconditionWithResult(
-      final Supplier<T> precondition) {
-    Ensure.notNull(precondition);
-    return new ComposedPrecondition<>(controller -> Optional.of(precondition.get()));
+      final Supplier<T> parameterSupplier) {
+    Ensure.notNull(parameterSupplier);
+    return new ComposedPrecondition<>(controller -> Optional.of(parameterSupplier.get()));
   }
 
 
+  /**
+   * Builder level to set the action with will be executed if the precondition is fulfilled. The
+   * implemented interfaces minimize the possible methods according the precondition.
+   * @param <T> type of the parameter from the precondition
+   */
   @Getter(AccessLevel.PRIVATE)
   public class ComposedPrecondition<T> implements ComposedPreconditionFunction<T>,
       ComposedPreconditionPredicate<T> {
@@ -81,7 +110,11 @@ public class ActionBuilder {
       });
     }
 
-
+    /**
+     * Builder level to set the postcondition to verify the success of the action. The
+     * implemented interfaces minimize the possible methods according the action.
+     * @param <S> type the result of the postcondition.
+     */
     @Getter(AccessLevel.PRIVATE)
     public class ComposedAction<S> implements ComposedActionFunction<S>, ComposedActionConsumer<S> {
       private final BiFunction<Controller, T, S> action;
@@ -146,18 +179,58 @@ public class ActionBuilder {
     }
   }
 
+  /**
+   * Returned type when the precondition returns a result.
+   * @param <T> type of the result
+   */
   public interface ComposedPreconditionFunction<T> {
+
+    /**
+     * Set a action witch gets a controller and a parameter from the precondition and returns a
+     * result to the postcondition.
+     * @param action to execute when precondition is fulfilled.
+     * @param <S> type of the action result
+     * @return a ComposedActionFunction object with expects a BiConsumer or a BiFunction to
+     *         handle the returned parameter in the postcondition.
+     */
     <S> ComposedActionFunction<S> actionWithResult(final BiFunction<Controller, T, S> action);
 
+    /**
+     * Set a action witch gets a controller and a parameter from the precondition.
+     * @param action to execute when precondition is fulfilled.
+     * @return a ComposedActionConsumer object with expects a Consumer or a Function to verify the
+     *         action.
+     */
     ComposedActionConsumer<Object> action(final BiConsumer<Controller, T> action);
   }
 
+  /**
+   * Returned type when the precondition doesn't returns a result.
+   * @param <T> type of the result
+   */
   public interface ComposedPreconditionPredicate<T> {
+    /**
+     * Set a action witch gets a controller and returns a result to the postcondition.
+     * @param action to execute when precondition is fulfilled.
+     * @param <S> type of the action result
+     * @return a ComposedActionFunction object with expects a BiConsumer or a BiFunction to
+     *         handle the returned parameter in the postcondition.
+     */
     <S> ComposedActionFunction<S> actionWithResult(final Function<Controller, S> action);
 
+    /**
+     * Set a action witch only gets a controller.
+     * @param action to execute when precondition is fulfilled.
+     * @return a ComposedActionConsumer object with expects a Consumer or a Function to verify the
+     *         action.
+     */
     ComposedActionConsumer<Object> action(final Consumer<Controller> action);
   }
 
+  /**
+   * Returned type when the action returns a result.
+   * @param <S> type of the result
+   */
   public interface ComposedActionFunction<S> {
     <U> Buildable<U> postconditionWithResult(
         final BiFunction<Controller, S, Optional<U>> postcondition);
@@ -168,6 +241,10 @@ public class ActionBuilder {
     Buildable<Boolean> emptyPostcondition();
   }
 
+  /**
+   * Returned type when the action doesn't returns a result.
+   * @param <S> type of the result
+   */
   public interface ComposedActionConsumer<S> {
     <U> Buildable<U> postconditionWithResult(
         final Function<Controller, Optional<U>> postcondition);
