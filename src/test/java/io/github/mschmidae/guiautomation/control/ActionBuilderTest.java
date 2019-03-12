@@ -164,6 +164,19 @@ class ActionBuilderTest {
   }
 
   @Test
+  void buildActionEmptyPostConditionWithCommunicationBetweenActionAndPostCondition() {
+    Object communicationObject = new Object();
+    Function<Controller, Object> action = new ActionBuilder()
+        .emptyPrecondition()
+        .actionWithResult(controller -> communicationObject)
+        .emptyPostconditionWithResult()
+        .build();
+
+    Object result = action.apply(mock(Controller.class));
+    assertThat(result).isEqualTo(communicationObject);
+  }
+
+  @Test
   void actionFailOnFalsePredicatePreCondition() {
     Function<Controller, Boolean> action = new ActionBuilder()
         .precondition(controller -> false)

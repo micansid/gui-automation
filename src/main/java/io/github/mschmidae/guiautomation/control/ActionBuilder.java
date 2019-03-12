@@ -158,6 +158,16 @@ public class ActionBuilder {
         return new ComposedPostcondition<>((controller, s) -> Optional.of(true));
       }
 
+      @Override
+      public Buildable<S> emptyPostconditionWithResult() {
+        return new ComposedPostcondition<S>((controller, s) -> Optional.of(s));
+      }
+
+      /**
+       * Builder level all conditions and the action is composed and the Builder is ready to be
+       * built.
+       * @param <U> type of the result returned by the postcondition
+       */
       @Getter(AccessLevel.PRIVATE)
       public class ComposedPostcondition<U> implements Buildable<U> {
         private final BiFunction<Controller, S, Optional<U>> postcondition;
@@ -166,6 +176,7 @@ public class ActionBuilder {
           this.postcondition = postcondition;
         }
 
+        @Override
         public Function<Controller, U> build() {
           return controller -> {
             T preTransfer = getPrecondition().apply(controller)
@@ -232,13 +243,30 @@ public class ActionBuilder {
    * @param <S> type of the result
    */
   public interface ComposedActionFunction<S> {
+    /**
+     * Set a postcondition witch gets the result of the action and a controller to verify the
+     * success of the action and returns also a result in an optional.
+     * @param postcondition to verify the action
+     * @param <U> type of the postcondition result
+     * @return a Buildable, ready to build the action function.
+     */
     <U> Buildable<U> postconditionWithResult(
         final BiFunction<Controller, S, Optional<U>> postcondition);
 
+    /**
+     * Set a postcondition witch gets the result of the action and a controller to verify the
+     * success of the action.
+     * @param postcondition to verify the action
+     * @return a Buildable, ready to build the action function.
+     */
     Buildable<Boolean> postcondition(
         final BiPredicate<Controller, S> postcondition);
 
-    Buildable<Boolean> emptyPostcondition();
+    /**
+     * Set an always fulfilled precondition and return the result of the action.
+     * @return a Buildable, ready to build the action function.
+     */
+    Buildable<S> emptyPostconditionWithResult();
   }
 
   /**
@@ -246,16 +274,40 @@ public class ActionBuilder {
    * @param <S> type of the result
    */
   public interface ComposedActionConsumer<S> {
+    /**
+     * Set a postcondition to verify the result of the action.
+     * @param postcondition to verify the action and return a result
+     * @param <U>
+     * @return a Buildable, ready to build the action function.
+     */
     <U> Buildable<U> postconditionWithResult(
         final Function<Controller, Optional<U>> postcondition);
 
+    /**
+     * Set a postcondition to verify the result of the action.
+     * @param postcondition to verify the action
+     * @return a Buildable, ready to build the action function.
+     */
     Buildable<Boolean> postcondition(
         final Predicate<Controller> postcondition);
 
+    /**
+     * Set an always fulfilled precondition.
+     * @return a Buildable, ready to build the action function.
+     */
     Buildable<Boolean> emptyPostcondition();
   }
 
+  /**
+   * Compleatly composed Builder, ready to build.
+   * @param <U> type of the result returned by the action function
+   */
   public interface Buildable<U> {
+    /**
+     * Compose precondition, action and postcondition to a single action function.
+     * @throws RuntimeException when pre- or postcondition is not fulfilled.
+     * @return a function with all composed parts
+     */
     Function<Controller, U> build();
   }
 }
