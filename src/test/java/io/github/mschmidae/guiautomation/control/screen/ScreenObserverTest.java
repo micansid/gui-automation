@@ -192,7 +192,8 @@ class ScreenObserverTest {
     Screen screen = mock(Screen.class);
     ScreenObserver sut = new ScreenObserver(screen, clock, 1);
 
-    Collection<Supplier<Image>> suppliers = Arrays.asList(FinderTestData.BUTTON_COMMIT, FinderTestData.BUTTON_CANCEL);
+    Collection<Supplier<Image>> suppliers = Arrays.asList(FinderTestData.BUTTON_COMMIT,
+        FinderTestData.BUTTON_CANCEL);
     Map<Image, List<Position>> firstPositions = new HashMap<>();
     firstPositions.put(FinderTestData.BUTTON_COMMIT.getImage(), Arrays.asList(new Position(1, 1)));
     firstPositions.put(FinderTestData.BUTTON_CANCEL.getImage(), Arrays.asList(new Position(2, 2)));

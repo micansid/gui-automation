@@ -139,8 +139,9 @@ public class ScreenObserver extends AbstractObserver {
    *
    */
 
-  public Optional<Map<Image, List<Position>>> waitWhileOne(final Collection<Supplier<Image>> patternSuppliers,
-                                      final long timeout, final long refreshInterval) {
+  public Optional<Map<Image, List<Position>>> waitWhileOne(
+      final Collection<Supplier<Image>> patternSuppliers, final long timeout,
+      final long refreshInterval) {
     Ensure.notNull(patternSuppliers);
     patternSuppliers.forEach(Ensure::suppliesNotNull);
     Ensure.notNegative(timeout);
@@ -158,8 +159,8 @@ public class ScreenObserver extends AbstractObserver {
     return waitWhileOptionalIsPresent(supplier, check, timeout, refreshInterval);
   }
 
-  public Optional<Map<Image, List<Position>>> waitWhileOne(final Collection<Supplier<Image>> patternSuppliers,
-                                                           final long timeout) {
+  public Optional<Map<Image, List<Position>>> waitWhileOne(
+      final Collection<Supplier<Image>> patternSuppliers, final long timeout) {
     return waitWhileOne(patternSuppliers, timeout, getRefreshInterval());
   }
 }
