@@ -338,6 +338,24 @@ public class Screen implements Supplier<Image> {
     return getFinder().at(screen, supplier.get(), position);
   }
 
+  //ToDo
+  public Map<Image, Boolean> imagesAtOnePosition(
+      final Map<Image, List<Position>> imagesWithPositions) {
+    Ensure.notNull(imagesWithPositions);
+
+    Image screen = getScreenSupplier().get();
+    return null;
+  }
+
+  //ToDo
+  public Map<Image, Boolean> imagesAtAllPositions(
+      final Map<Image, List<Position>> imagesWithPositions) {
+    Ensure.notNull(imagesWithPositions);
+
+    Image screen = getScreenSupplier().get();
+    return null;
+  }
+
 
   /**
    * Width of the screen.

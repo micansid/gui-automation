@@ -132,4 +132,34 @@ public class ScreenObserver extends AbstractObserver {
                                                    final long timeout, final long refreshInterval) {
     return getExecutor().submit(() -> waitUntilOne(patternSuppliers, timeout, refreshInterval));
   }
+
+  /*
+   *
+   * waitWhileOne
+   *
+   */
+
+  public Optional<Map<Image, List<Position>>> waitWhileOne(final Set<Supplier<Image>> patternSuppliers,
+                                      final long timeout, final long refreshInterval) {
+    Ensure.notNull(patternSuppliers);
+    patternSuppliers.stream().forEach(Ensure::suppliesNotNull);
+    Ensure.notNegative(timeout);
+    Ensure.greater(refreshInterval, 0);
+
+    Predicate<Map<Image, List<Position>>> check = positions ->
+        positions.entrySet().stream()
+            .map(entry -> entry.getValue().stream()
+                .map(position -> getScreen().imageAt(entry.getKey(), position))
+                .filter(bool -> bool)
+                .findFirst().orElse(false))
+            .filter(bool -> !bool)
+            .findFirst().orElse(true);
+
+    Supplier<Optional<Map<Image, List<Position>>>> supplier = () -> {
+      Map<Image, List<Position>> positions = getScreen().positionsOf(patternSuppliers);
+      return check.test(positions) ? Optional.empty() : Optional.of(positions);
+    };
+
+    return waitWhileOptionalIsPresent(supplier, check, timeout, refreshInterval);
+  }
 }
