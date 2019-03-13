@@ -142,18 +142,13 @@ public class ScreenObserver extends AbstractObserver {
   public Optional<Map<Image, List<Position>>> waitWhileOne(final Set<Supplier<Image>> patternSuppliers,
                                       final long timeout, final long refreshInterval) {
     Ensure.notNull(patternSuppliers);
-    patternSuppliers.stream().forEach(Ensure::suppliesNotNull);
+    patternSuppliers.forEach(Ensure::suppliesNotNull);
     Ensure.notNegative(timeout);
     Ensure.greater(refreshInterval, 0);
 
     Predicate<Map<Image, List<Position>>> check = positions ->
-        positions.entrySet().stream()
-            .map(entry -> entry.getValue().stream()
-                .map(position -> getScreen().imageAt(entry.getKey(), position))
-                .filter(bool -> bool)
-                .findFirst().orElse(false))
-            .filter(bool -> !bool)
-            .findFirst().orElse(true);
+        getScreen().imagesAtOnePosition(positions).values().stream()
+            .reduce((a, b) -> a | b).map(bool -> !bool).orElse(false);
 
     Supplier<Optional<Map<Image, List<Position>>>> supplier = () -> {
       Map<Image, List<Position>> positions = getScreen().positionsOf(patternSuppliers);

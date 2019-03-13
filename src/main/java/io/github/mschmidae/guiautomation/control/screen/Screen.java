@@ -11,6 +11,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.Optional;
 import java.util.Set;
+import java.util.function.BinaryOperator;
 import java.util.function.Supplier;
 import java.util.stream.Collectors;
 
@@ -338,22 +339,43 @@ public class Screen implements Supplier<Image> {
     return getFinder().at(screen, supplier.get(), position);
   }
 
-  //ToDo
+  /**
+   * Verify if the key image is present at least one of the positions.
+   * @param imagesWithPositions map of images and positions to verify
+   * @return result of the verification for each image
+   */
   public Map<Image, Boolean> imagesAtOnePosition(
       final Map<Image, List<Position>> imagesWithPositions) {
-    Ensure.notNull(imagesWithPositions);
-
-    Image screen = getScreenSupplier().get();
-    return null;
+    return imagesAt(imagesWithPositions, (a, b) -> a | b);
   }
 
-  //ToDo
+  /**
+   * Verify if the key image is present at all positions.
+   * @param imagesWithPositions map of images and positions to verify
+   * @return result of the verification for each image
+   */
   public Map<Image, Boolean> imagesAtAllPositions(
       final Map<Image, List<Position>> imagesWithPositions) {
+    return imagesAt(imagesWithPositions, (a, b) -> a & b);
+  }
+
+  /**
+   * Check each image and all positions if they are still present there.
+   * @param imagesWithPositions map of images and positions to verify
+   * @param booleanReduce rule to reduce the single result to one result
+   * @return result of the verification for each image
+   */
+  private Map<Image, Boolean> imagesAt(final Map<Image, List<Position>> imagesWithPositions,
+                                       final BinaryOperator<Boolean> booleanReduce) {
     Ensure.notNull(imagesWithPositions);
 
     Image screen = getScreenSupplier().get();
-    return null;
+    return imagesWithPositions.entrySet().stream()
+        .collect(Collectors.toMap(Map.Entry::getKey,
+            entry -> entry.getValue().stream()
+                .map(position -> getFinder().at(screen, entry.getKey(), position))
+                .reduce(booleanReduce)
+                .orElse(false)));
   }
 
 
