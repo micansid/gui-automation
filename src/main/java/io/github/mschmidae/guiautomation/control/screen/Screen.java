@@ -7,6 +7,7 @@ import io.github.mschmidae.guiautomation.util.Section;
 import io.github.mschmidae.guiautomation.util.helper.Ensure;
 import io.github.mschmidae.guiautomation.util.image.Image;
 
+import java.util.Collection;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
@@ -155,7 +156,7 @@ public class Screen implements Supplier<Image> {
    * @return map of all pattern images as key and the list of positions as value. When the pattern
    *         isn't present the value is an empty list
    */
-  public Map<Image, List<Position>> positionsOf(final Set<Supplier<Image>> suppliers) {
+  public Map<Image, List<Position>> positionsOf(final Collection<Supplier<Image>> suppliers) {
     Ensure.containsNoNull(suppliers);
     suppliers.forEach(Ensure::suppliesNotNull);
 
@@ -172,7 +173,7 @@ public class Screen implements Supplier<Image> {
    * @return map of all pattern images as key and the list of positions as value. When the pattern
    *         isn't present in the section the value is an empty list
    */
-  public Map<Image, List<Position>> positionsOf(final Set<Supplier<Image>> suppliers,
+  public Map<Image, List<Position>> positionsOf(final Collection<Supplier<Image>> suppliers,
                                                 final Section section) {
     Ensure.containsNoNull(suppliers);
     suppliers.forEach(Ensure::suppliesNotNull);
@@ -294,7 +295,7 @@ public class Screen implements Supplier<Image> {
    * @return map of all pattern images as key and the list of click positions as value. When the
    *         pattern isn't present the value is an empty list
    */
-  public Map<Image, List<Position>> clickPositionsOf(final Set<Supplier<Image>> suppliers) {
+  public Map<Image, List<Position>> clickPositionsOf(final Collection<Supplier<Image>> suppliers) {
     Ensure.containsNoNull(suppliers);
     suppliers.forEach(Ensure::suppliesNotNull);
 
@@ -312,7 +313,7 @@ public class Screen implements Supplier<Image> {
    * @return map of all pattern images as key and the list of click positions as value. When the
    *         pattern isn't present in the section the value is an empty list
    */
-  public Map<Image, List<Position>> clickPositionsOf(final Set<Supplier<Image>> suppliers,
+  public Map<Image, List<Position>> clickPositionsOf(final Collection<Supplier<Image>> suppliers,
                                                      final Section section) {
     Ensure.containsNoNull(suppliers);
     suppliers.forEach(Ensure::suppliesNotNull);
