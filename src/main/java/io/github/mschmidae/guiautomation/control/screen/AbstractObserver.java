@@ -30,10 +30,10 @@ public abstract class AbstractObserver {
     }
   }
 
-  protected <T> Optional<T> waitUntilOptionalIsPresent(final Supplier<Optional<T>> positionSupplier,
+  protected <T> Optional<T> waitUntilOptionalIsPresent(final Supplier<Optional<T>> supplier,
                                                     final long timeout,
                                                     final long refreshInterval) {
-    Ensure.notNull(positionSupplier);
+    Ensure.notNull(supplier);
     Ensure.greater(timeout, 0);
     Ensure.greater(refreshInterval, 0);
 
@@ -41,19 +41,20 @@ public abstract class AbstractObserver {
     long end = start + timeout;
     long remaining = end - start;
 
-    Optional<T> result = positionSupplier.get();
+    Optional<T> result = supplier.get();
 
     while (!result.isPresent() && remaining > 0) {
       sleepShorterTime(remaining, refreshInterval);
       remaining = end - getClock().get();
-      result = positionSupplier.get();
+      result = supplier.get();
     }
 
     return result;
   }
 
-  protected <T> Optional<T> waitWhileOptionalIsPresent(final Supplier<Optional<T>>supplier, final Predicate<T> check,
-                                   final long timeout, final long refreshInterval) {
+  protected <T> Optional<T> waitWhileOptionalIsPresent(final Supplier<Optional<T>>supplier,
+                                                       final Predicate<T> check, final long timeout,
+                                                       final long refreshInterval) {
     Ensure.notNull(supplier);
     Ensure.notNull(check);
     Ensure.notNegative(timeout);

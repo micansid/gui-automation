@@ -267,4 +267,82 @@ class ScreenTest {
     assertThat(sut.width()).isEqualTo(771);
     assertThat(sut.height()).isEqualTo(827);
   }
+
+  @Test
+  void imagesAtOneOfTheSpecifiedPositionAllPresent() {
+    Screen sut = new Screen(FinderTestData.SCREEN);
+    Map<Image, List<Position>> positions = new HashMap<>();
+    positions.put(FinderTestData.BUTTON_COMMIT.getImage(),
+        FinderTestData.BUTTON_COMMIT.getPositions());
+    positions.put(FinderTestData.CHECKBOX_UNCHECKED.getImage(),
+        FinderTestData.CHECKBOX_UNCHECKED.getPositions());
+    Map<Image, Boolean> result = sut.imagesAtOnePosition(positions);
+    assertThat(result).doesNotContainValue(false);
+  }
+
+  @Test
+  void imagesAtAllSpecifiedPositionArePresent() {
+    Screen sut = new Screen(FinderTestData.SCREEN);
+    Map<Image, List<Position>> positions = new HashMap<>();
+    positions.put(FinderTestData.BUTTON_COMMIT.getImage(),
+        FinderTestData.BUTTON_COMMIT.getPositions());
+    positions.put(FinderTestData.CHECKBOX_UNCHECKED.getImage(),
+        FinderTestData.CHECKBOX_UNCHECKED.getPositions());
+    Map<Image, Boolean> result = sut.imagesAtAllPositions(positions);
+    assertThat(result).doesNotContainValue(false);
+  }
+
+  @Test
+  void imagesAtOneOfTheSpecifiedPositionOneOfManyMissing() {
+    Screen sut = new Screen(FinderTestData.SCREEN);
+    Map<Image, List<Position>> positions = new HashMap<>();
+    positions.put(FinderTestData.BUTTON_COMMIT.getImage(),
+        FinderTestData.BUTTON_COMMIT.getPositions());
+    List<Position> uncheckCheckboxes = new ArrayList<>(FinderTestData.CHECKBOX_UNCHECKED.getPositions());
+    uncheckCheckboxes.add(new Position(0, 0));
+    positions.put(FinderTestData.CHECKBOX_UNCHECKED.getImage(), uncheckCheckboxes);
+    Map<Image, Boolean> result = sut.imagesAtOnePosition(positions);
+    assertThat(result.get(FinderTestData.BUTTON_COMMIT.getImage())).isTrue();
+    assertThat(result.get(FinderTestData.CHECKBOX_UNCHECKED.getImage())).isTrue();
+  }
+
+  @Test
+  void imagesAtAllSpecifiedPositionOneOfManyMissing() {
+    Screen sut = new Screen(FinderTestData.SCREEN);
+    Map<Image, List<Position>> positions = new HashMap<>();
+    positions.put(FinderTestData.BUTTON_COMMIT.getImage(),
+        FinderTestData.BUTTON_COMMIT.getPositions());
+    List<Position> uncheckCheckboxes = new ArrayList<>(FinderTestData.CHECKBOX_UNCHECKED.getPositions());
+    uncheckCheckboxes.add(new Position(0, 0));
+    positions.put(FinderTestData.CHECKBOX_UNCHECKED.getImage(), uncheckCheckboxes);
+    Map<Image, Boolean> result = sut.imagesAtAllPositions(positions);
+    assertThat(result.get(FinderTestData.BUTTON_COMMIT.getImage())).isTrue();
+    assertThat(result.get(FinderTestData.CHECKBOX_UNCHECKED.getImage())).isFalse();
+  }
+
+  @Test
+  void imagesAtOneOfTheSpecifiedPositionOneMissing() {
+    Screen sut = new Screen(FinderTestData.SCREEN);
+    Map<Image, List<Position>> positions = new HashMap<>();
+    positions.put(FinderTestData.BUTTON_COMMIT.getImage(),
+        Arrays.asList(new Position(0, 0)));
+    positions.put(FinderTestData.CHECKBOX_UNCHECKED.getImage(),
+        FinderTestData.CHECKBOX_UNCHECKED.getPositions());
+    Map<Image, Boolean> result = sut.imagesAtOnePosition(positions);
+    assertThat(result.get(FinderTestData.BUTTON_COMMIT.getImage())).isFalse();
+    assertThat(result.get(FinderTestData.CHECKBOX_UNCHECKED.getImage())).isTrue();
+  }
+
+  @Test
+  void imagesAtAllSpecifiedPositionOneMissing() {
+    Screen sut = new Screen(FinderTestData.SCREEN);
+    Map<Image, List<Position>> positions = new HashMap<>();
+    positions.put(FinderTestData.BUTTON_COMMIT.getImage(),
+        Arrays.asList(new Position(0, 0)));
+    positions.put(FinderTestData.CHECKBOX_UNCHECKED.getImage(),
+        FinderTestData.CHECKBOX_UNCHECKED.getPositions());
+    Map<Image, Boolean> result = sut.imagesAtAllPositions(positions);
+    assertThat(result.get(FinderTestData.BUTTON_COMMIT.getImage())).isFalse();
+    assertThat(result.get(FinderTestData.CHECKBOX_UNCHECKED.getImage())).isTrue();
+  }
 }

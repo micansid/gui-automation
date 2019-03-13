@@ -7,10 +7,12 @@ import io.github.mschmidae.guiautomation.util.Section;
 import io.github.mschmidae.guiautomation.util.helper.Ensure;
 import io.github.mschmidae.guiautomation.util.image.Image;
 
+import java.util.Collection;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
 import java.util.Set;
+import java.util.function.BinaryOperator;
 import java.util.function.Supplier;
 import java.util.stream.Collectors;
 
@@ -154,7 +156,7 @@ public class Screen implements Supplier<Image> {
    * @return map of all pattern images as key and the list of positions as value. When the pattern
    *         isn't present the value is an empty list
    */
-  public Map<Image, List<Position>> positionsOf(final Set<Supplier<Image>> suppliers) {
+  public Map<Image, List<Position>> positionsOf(final Collection<Supplier<Image>> suppliers) {
     Ensure.containsNoNull(suppliers);
     suppliers.forEach(Ensure::suppliesNotNull);
 
@@ -171,7 +173,7 @@ public class Screen implements Supplier<Image> {
    * @return map of all pattern images as key and the list of positions as value. When the pattern
    *         isn't present in the section the value is an empty list
    */
-  public Map<Image, List<Position>> positionsOf(final Set<Supplier<Image>> suppliers,
+  public Map<Image, List<Position>> positionsOf(final Collection<Supplier<Image>> suppliers,
                                                 final Section section) {
     Ensure.containsNoNull(suppliers);
     suppliers.forEach(Ensure::suppliesNotNull);
@@ -293,7 +295,7 @@ public class Screen implements Supplier<Image> {
    * @return map of all pattern images as key and the list of click positions as value. When the
    *         pattern isn't present the value is an empty list
    */
-  public Map<Image, List<Position>> clickPositionsOf(final Set<Supplier<Image>> suppliers) {
+  public Map<Image, List<Position>> clickPositionsOf(final Collection<Supplier<Image>> suppliers) {
     Ensure.containsNoNull(suppliers);
     suppliers.forEach(Ensure::suppliesNotNull);
 
@@ -311,7 +313,7 @@ public class Screen implements Supplier<Image> {
    * @return map of all pattern images as key and the list of click positions as value. When the
    *         pattern isn't present in the section the value is an empty list
    */
-  public Map<Image, List<Position>> clickPositionsOf(final Set<Supplier<Image>> suppliers,
+  public Map<Image, List<Position>> clickPositionsOf(final Collection<Supplier<Image>> suppliers,
                                                      final Section section) {
     Ensure.containsNoNull(suppliers);
     suppliers.forEach(Ensure::suppliesNotNull);
@@ -336,6 +338,45 @@ public class Screen implements Supplier<Image> {
 
     Image screen = getScreenSupplier().get();
     return getFinder().at(screen, supplier.get(), position);
+  }
+
+  /**
+   * Verify if the key image is present at least one of the positions.
+   * @param imagesWithPositions map of images and positions to verify
+   * @return result of the verification for each image
+   */
+  public Map<Image, Boolean> imagesAtOnePosition(
+      final Map<Image, List<Position>> imagesWithPositions) {
+    return imagesAt(imagesWithPositions, (a, b) -> a | b);
+  }
+
+  /**
+   * Verify if the key image is present at all positions.
+   * @param imagesWithPositions map of images and positions to verify
+   * @return result of the verification for each image
+   */
+  public Map<Image, Boolean> imagesAtAllPositions(
+      final Map<Image, List<Position>> imagesWithPositions) {
+    return imagesAt(imagesWithPositions, (a, b) -> a & b);
+  }
+
+  /**
+   * Check each image and all positions if they are still present there.
+   * @param imagesWithPositions map of images and positions to verify
+   * @param booleanReduce rule to reduce the single result to one result
+   * @return result of the verification for each image
+   */
+  private Map<Image, Boolean> imagesAt(final Map<Image, List<Position>> imagesWithPositions,
+                                       final BinaryOperator<Boolean> booleanReduce) {
+    Ensure.notNull(imagesWithPositions);
+
+    Image screen = getScreenSupplier().get();
+    return imagesWithPositions.entrySet().stream()
+        .collect(Collectors.toMap(Map.Entry::getKey,
+            entry -> entry.getValue().stream()
+                .map(position -> getFinder().at(screen, entry.getKey(), position))
+                .reduce(booleanReduce)
+                .orElse(false)));
   }
 
 

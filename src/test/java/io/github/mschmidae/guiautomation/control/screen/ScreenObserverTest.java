@@ -1,16 +1,22 @@
 package io.github.mschmidae.guiautomation.control.screen;
 
+import io.github.mschmidae.guiautomation.algorithm.find.FinderTestData;
 import io.github.mschmidae.guiautomation.util.Position;
 import io.github.mschmidae.guiautomation.util.function.TriFunction;
 import io.github.mschmidae.guiautomation.util.image.Image;
+import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Collection;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.Optional;
 import java.util.Set;
 import java.util.concurrent.ExecutionException;
 import java.util.function.Supplier;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
+import org.junit.jupiter.api.Test;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.MethodSource;
 
@@ -19,6 +25,7 @@ import static org.assertj.core.api.Assertions.assertThat;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.eq;
 import static org.mockito.Mockito.mock;
+import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.when;
 
 class ScreenObserverTest {
@@ -176,6 +183,36 @@ class ScreenObserverTest {
     when(screen.imageAt(any(Supplier.class), eq(GOOD_CASE.get())))
         .thenReturn(true, true, false);
     assertWaitWhile(waitWhile, screen, 2, false);
+  }
+
+  @Test
+  void waitWhileOneNoMorePresentAtFirstPredicateCheck() {
+    Supplier<Long> clock = (Supplier<Long>) mock(Supplier.class);
+    when(clock.get()).thenReturn(0L, 1L, 2L, 3L, 4L, 5L, 6L, 7L, 8L, 9L, 10L, 11L, 12L, 13L, 14L, 15L, 16L, 17L, 18L, 19L, 20L);
+    Screen screen = mock(Screen.class);
+    ScreenObserver sut = new ScreenObserver(screen, clock, 1);
+
+    Collection<Supplier<Image>> suppliers = Arrays.asList(FinderTestData.BUTTON_COMMIT,
+        FinderTestData.BUTTON_CANCEL);
+    Map<Image, List<Position>> firstPositions = new HashMap<>();
+    firstPositions.put(FinderTestData.BUTTON_COMMIT.getImage(), Arrays.asList(new Position(1, 1)));
+    firstPositions.put(FinderTestData.BUTTON_CANCEL.getImage(), Arrays.asList(new Position(2, 2)));
+    Map<Image, List<Position>> secondPositions = new HashMap<>();
+    secondPositions.put(FinderTestData.BUTTON_COMMIT.getImage(), new ArrayList<>());
+    secondPositions.put(FinderTestData.BUTTON_CANCEL.getImage(), new ArrayList<>());
+
+    when(screen.positionsOf(suppliers))
+        .thenReturn(firstPositions)
+        .thenReturn(secondPositions);
+    Map<Image, Boolean> imagesAtOnePositionResult = new HashMap<>();
+    imagesAtOnePositionResult.put(FinderTestData.BUTTON_COMMIT.getImage(), false);
+    imagesAtOnePositionResult.put(FinderTestData.BUTTON_CANCEL.getImage(), false);
+    when(screen.imagesAtOnePosition(firstPositions))
+        .thenReturn(imagesAtOnePositionResult);
+
+    Optional<Map<Image, List<Position>>> result = sut.waitWhileOne(suppliers, 1);
+
+    assertThat(result).isEmpty();
   }
 
   private void assertWaitUntil(final TriFunction<Optional<Position>, ScreenObserver,

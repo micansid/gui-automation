@@ -3,10 +3,10 @@ package io.github.mschmidae.guiautomation.control.screen;
 import io.github.mschmidae.guiautomation.util.Position;
 import io.github.mschmidae.guiautomation.util.helper.Ensure;
 import io.github.mschmidae.guiautomation.util.image.Image;
+import java.util.Collection;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
-import java.util.Set;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 import java.util.concurrent.Future;
@@ -131,5 +131,36 @@ public class ScreenObserver extends AbstractObserver {
   public Future<Optional<Position>> waitUntilOneAsync(final List<Supplier<Image>> patternSuppliers,
                                                    final long timeout, final long refreshInterval) {
     return getExecutor().submit(() -> waitUntilOne(patternSuppliers, timeout, refreshInterval));
+  }
+
+  /*
+   *
+   * waitWhileOne
+   *
+   */
+
+  public Optional<Map<Image, List<Position>>> waitWhileOne(
+      final Collection<Supplier<Image>> patternSuppliers, final long timeout,
+      final long refreshInterval) {
+    Ensure.notNull(patternSuppliers);
+    patternSuppliers.forEach(Ensure::suppliesNotNull);
+    Ensure.notNegative(timeout);
+    Ensure.greater(refreshInterval, 0);
+
+    Predicate<Map<Image, List<Position>>> check = positions ->
+        getScreen().imagesAtOnePosition(positions).values().stream()
+            .reduce((a, b) -> a | b).map(bool -> !bool).orElse(false);
+
+    Supplier<Optional<Map<Image, List<Position>>>> supplier = () -> {
+      Map<Image, List<Position>> positions = getScreen().positionsOf(patternSuppliers);
+      return check.test(positions) ? Optional.empty() : Optional.of(positions);
+    };
+
+    return waitWhileOptionalIsPresent(supplier, check, timeout, refreshInterval);
+  }
+
+  public Optional<Map<Image, List<Position>>> waitWhileOne(
+      final Collection<Supplier<Image>> patternSuppliers, final long timeout) {
+    return waitWhileOne(patternSuppliers, timeout, getRefreshInterval());
   }
 }
