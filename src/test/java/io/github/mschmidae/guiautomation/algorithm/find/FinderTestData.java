@@ -29,7 +29,7 @@ public enum FinderTestData implements Supplier<Image> {
   private final List<Position> positions = new ArrayList<>();
 
   FinderTestData(final String imagePath, Position... positions) {
-    image = new ImageLoader().load(imagePath)
+    image = new ImageLoader().loadFromResources(imagePath)
         .orElseThrow(() -> new RuntimeException("The image " + imagePath + " could not be loaded"));
     this.positions.addAll(Arrays.asList(positions));
   }

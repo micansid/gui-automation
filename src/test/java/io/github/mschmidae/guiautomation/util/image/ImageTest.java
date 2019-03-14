@@ -8,14 +8,13 @@ import java.awt.*;
 import java.awt.image.BufferedImage;
 
 import static org.assertj.core.api.Assertions.assertThat;
-import static org.junit.jupiter.api.Assertions.*;
 
 class ImageTest {
   private static final BufferedImage IMAGE_COMMIT_BUTTON = new ImageLoader()
-      .loadBufferedImage("intellij_button_commit.png")
+      .loadBufferedImageFromResources("intellij_button_commit.png")
       .orElseThrow(() -> new RuntimeException("The test image ist not available"));
   private static final BufferedImage IMAGE_CANCEL_BUTTON = new ImageLoader()
-      .loadBufferedImage("intellij_button_cancel.png")
+      .loadBufferedImageFromResources("intellij_button_cancel.png")
       .orElseThrow(() -> new RuntimeException("The test image ist not available"));
 
   @Test
@@ -47,7 +46,7 @@ class ImageTest {
   @Test
   void twoImagesWithEqualBufferedImageAreEqual() {
     BufferedImage commit_button = new ImageLoader()
-        .loadBufferedImage("intellij_button_commit.png")
+        .loadBufferedImageFromResources("intellij_button_commit.png")
         .orElseThrow(() -> new RuntimeException("The test image ist not available"));
 
     Image sut = new Image(commit_button);

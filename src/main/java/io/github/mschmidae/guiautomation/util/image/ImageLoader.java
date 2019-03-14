@@ -11,10 +11,10 @@ import javax.imageio.ImageIO;
 public class ImageLoader {
   /**
    * Load a image from the resources directory.
-   * @param path of the image to load
+   * @param path of the image to loadFromResources
    * @return BufferedImage when the image exists, else an empty optional
    */
-  public Optional<BufferedImage> loadBufferedImage(final String path) {
+  public Optional<BufferedImage> loadBufferedImageFromResources(final String path) {
     Ensure.notBlank(path);
 
     Optional<BufferedImage> result = Optional.empty();
@@ -31,7 +31,7 @@ public class ImageLoader {
     return result;
   }
 
-  public Optional<Image> load(final String path) {
-    return loadBufferedImage(path).map(Image::new);
+  public Optional<Image> loadFromResources(final String path) {
+    return loadBufferedImageFromResources(path).map(Image::new);
   }
 }
