@@ -10,8 +10,15 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.util.Optional;
 import javax.imageio.ImageIO;
+import lombok.AccessLevel;
+import lombok.Getter;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
+@Getter(AccessLevel.PRIVATE)
 public class ImageLoader {
+  private final Logger logger = LoggerFactory.getLogger(getClass());
+
   /**
    * Load a image from the resources directory.
    * @param path of the image to loadFromResources
@@ -33,9 +40,9 @@ public class ImageLoader {
 
     try {
       result = load(new BufferedInputStream(new FileInputStream(path)));
-    } catch (FileNotFoundException e) {
+    } catch (FileNotFoundException exception) {
+      getLogger().error(exception.getMessage());
       // return empty optional
-      //ToDo Logging
     }
 
     return result;
@@ -50,9 +57,9 @@ public class ImageLoader {
     try {
       BufferedImage bufferedImage = ImageIO.read(inputStream);
       result = Optional.of(bufferedImage);
-    } catch (IOException e) {
+    } catch (IOException exception) {
+      getLogger().error(exception.getMessage());
       // return empty optional
-      //ToDo Logging
     }
     return result;
   }
