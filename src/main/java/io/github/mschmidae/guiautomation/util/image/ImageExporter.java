@@ -15,11 +15,12 @@ public class ImageExporter {
   public boolean export(final BufferedImage image, final String path) {
     boolean result = false;
     try {
-      File outputfile = new File(path + ".png");
+      File outputfile = new File(path);
       ImageIO.write(image, "png", outputfile);
       result = true;
     } catch (IOException e) {
       //result ist false
+      //ToDo Logging
     }
     return result;
   }
