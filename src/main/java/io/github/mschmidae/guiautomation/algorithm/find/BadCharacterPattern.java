@@ -57,6 +57,7 @@ public class BadCharacterPattern {
         .sorted().findFirst().get();
   }
 
+  @Getter(AccessLevel.PRIVATE)
   private class PatternLine implements Comparable<PatternLine> {
     private final int lineIndex;
     private final int transparentOffset;
@@ -118,20 +119,12 @@ public class BadCharacterPattern {
       return Collections.unmodifiableMap(colorDelta);
     }
 
-    private int getLineIndex() {
-      return lineIndex;
-    }
-
-    private int getTransparentOffset() {
-      return transparentOffset;
-    }
-
     private int getDifferentColorCount() {
-      return colors.size();
+      return getColors().size();
     }
 
     public Map<Integer, Integer> getColorDelta() {
-      return colorDelta;
+      return Collections.unmodifiableMap(colorDelta);
     }
   }
 }
