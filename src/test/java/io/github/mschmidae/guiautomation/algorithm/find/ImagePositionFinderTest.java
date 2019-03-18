@@ -12,7 +12,11 @@ import static org.assertj.core.api.Assertions.assertThat;
 
 class ImagePositionFinderTest {
   private static Stream<ImagePositionFinder> finderProvider() {
-    return Stream.of(new SimpleFinder(), new SimpleFinderStream());
+    return Stream.of(
+        new SimpleFinder(),
+        new SimpleFinderStream(),
+        new BadCharacterFinder(),
+        new ImagePositionFinderBenchmark(new SimpleFinder(), new BadCharacterFinder()));
   }
 
   @ParameterizedTest
@@ -49,6 +53,12 @@ class ImagePositionFinderTest {
   @MethodSource("finderProvider")
   void findFirstPositionsOfButtonFramesContainsTransparentParts(final ImagePositionFinder finder) {
     findFirstPositionOf(finder, FinderTestData.BUTTON_FRAME);
+  }
+
+  @ParameterizedTest
+  @MethodSource("finderProvider")
+  void findPositionOfScreenImage(final ImagePositionFinder finder) {
+    findFirstPositionOf(finder, FinderTestData.SCREEN);
   }
 
   @ParameterizedTest
