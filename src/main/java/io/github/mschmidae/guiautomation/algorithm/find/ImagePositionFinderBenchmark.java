@@ -5,14 +5,12 @@ import io.github.mschmidae.guiautomation.util.function.TriFunction;
 import io.github.mschmidae.guiautomation.util.helper.Ensure;
 import io.github.mschmidae.guiautomation.util.helper.StopWatch;
 import io.github.mschmidae.guiautomation.util.image.Image;
-import java.awt.image.BufferedImage;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
 import java.util.Set;
-import java.util.function.BiFunction;
 import java.util.stream.Collectors;
 import lombok.AccessLevel;
 import lombok.Getter;
@@ -48,39 +46,15 @@ public class ImagePositionFinderBenchmark implements ImagePositionFinder {
 
   @Override
   public boolean at(final Image image, final Image pattern, final Position position) {
-    List<Boolean> results = new ArrayList<>();
-
-    for (Map.Entry<ImagePositionFinder, StopWatch> unit : getBenchmarkUnit().entrySet()) {
-      unit.getValue().start();
-      results.add(unit.getKey().at(image, pattern, position));
-      unit.getValue().pause();
-    }
-
-    for (Boolean result : results) {
-      if (!result.equals(results.get(0))) {
-        throw new RuntimeException("The results of the at method from the ImagePositionFinders differ");
-      }
-    }
-    return results.get(0);
+    return runOnEachFinder((finder, i, p) -> finder.at(i, p, position), image, pattern,
+        "The results of the at() method from the ImagePositionFinders differ");
   }
 
   @Override
   public boolean at(final Image image, final Image pattern, final int positionX,
                     final int positionY) {
-    List<Boolean> results = new ArrayList<>();
-
-    for (Map.Entry<ImagePositionFinder, StopWatch> unit : getBenchmarkUnit().entrySet()) {
-      unit.getValue().start();
-      results.add(unit.getKey().at(image, pattern, positionX, positionY));
-      unit.getValue().pause();
-    }
-
-    for (Boolean result : results) {
-      if (!result.equals(results.get(0))) {
-        throw new RuntimeException("The results of the at method from the ImagePositionFinders differ");
-      }
-    }
-    return results.get(0);
+    return runOnEachFinder((finder, i, p) -> finder.at(i, p, positionX, positionY), image, pattern,
+        "The results of the at() method from the ImagePositionFinders differ");
   }
 
 
