@@ -1,6 +1,7 @@
 package io.github.mschmidae.guiautomation.algorithm.find;
 
 import io.github.mschmidae.guiautomation.util.Position;
+import io.github.mschmidae.guiautomation.util.function.TriFunction;
 import io.github.mschmidae.guiautomation.util.helper.Ensure;
 import io.github.mschmidae.guiautomation.util.helper.StopWatch;
 import io.github.mschmidae.guiautomation.util.image.Image;
@@ -28,6 +29,8 @@ public class ImagePositionFinderBenchmark implements ImagePositionFinder {
 
   @Override
   public Optional<Position> find(Image image, Image pattern) {
+    return runOnEachFinder(ImagePositionFinder::find, image, pattern, "The results of the find method from the ImagePositionFinders differ");
+    /*
     List<Optional<Position>> results = new ArrayList<>();
 
     for (Map.Entry<ImagePositionFinder, StopWatch> unit : getBenchmarkUnit().entrySet()) {
@@ -42,6 +45,7 @@ public class ImagePositionFinderBenchmark implements ImagePositionFinder {
       }
     }
     return results.get(0);
+    */
   }
 
   @Override
@@ -117,10 +121,17 @@ public class ImagePositionFinderBenchmark implements ImagePositionFinder {
   }
 
 
-  public void printResult() {
+  public String result() {
+    String result = "";
     for (Map.Entry<Class<? extends ImagePositionFinder>, Double> unit : benchmarkResultMilliSeconds().entrySet()) {
-      System.out.println(unit.getKey() + " - " + unit.getValue());
+      result += unit.getKey() + " - " + unit.getValue() + "\n";
     }
+    return result;
+  }
+
+  @Override
+  public String toString() {
+    return result();
   }
 
   public Map<Class<? extends ImagePositionFinder>, Long> benchmarkResultNanoSeconds() {
@@ -139,18 +150,19 @@ public class ImagePositionFinderBenchmark implements ImagePositionFinder {
     return result;
   }
 
-  private <T, U> U runOnEachFinder(BiFunction<BufferedImage, T, U> method, BufferedImage image, T pattern) {
+  private <T, U> U runOnEachFinder(final TriFunction<ImagePositionFinder,Image, T, U> method, final Image image,
+                                   final T parameter, final String message) {
     List<U> results = new ArrayList<>();
 
     for (Map.Entry<ImagePositionFinder, StopWatch> unit : getBenchmarkUnit().entrySet()) {
       unit.getValue().start();
-      results.add(method.apply(image, pattern));
+      results.add(method.apply(unit.getKey(), image, parameter));
       unit.getValue().pause();
     }
 
     for (U result : results) {
       if (!result.equals(results.get(0))) {
-        throw new RuntimeException("The results of the find method from the ImagePositionFinders differ");
+        throw new RuntimeException(message);
       }
     }
     return results.get(0);

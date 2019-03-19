@@ -33,6 +33,7 @@ class ImagePositionFinderBenchmarkTest {
     assertThat(finderBenchmark.find(TEST_IMAGE, TEST_IMAGE)).isPresent().contains(TEST_POSITION);
     assertThat(finderBenchmark.benchmarkResultNanoSeconds()).containsKeys(finder1.getClass(), finder2.getClass());
     assertThat(finderBenchmark.benchmarkResultMilliSeconds()).containsKeys(finder1.getClass(), finder2.getClass());
+    System.out.println(finderBenchmark);
   }
 
   @Test
@@ -60,6 +61,7 @@ class ImagePositionFinderBenchmarkTest {
     assertThat(finderBenchmark.findAll(TEST_IMAGE, TEST_IMAGE)).hasSize(1).contains(TEST_POSITION);
     assertThat(finderBenchmark.benchmarkResultNanoSeconds()).containsKeys(finder1.getClass(), finder2.getClass());
     assertThat(finderBenchmark.benchmarkResultMilliSeconds()).containsKeys(finder1.getClass(), finder2.getClass());
+    System.out.println(finderBenchmark);
   }
 
   @Test
@@ -91,6 +93,7 @@ class ImagePositionFinderBenchmarkTest {
     assertThat(finderBenchmark.findAll(TEST_IMAGE, patternSet)).hasSize(1).isEqualTo(resultMap);
     assertThat(finderBenchmark.benchmarkResultNanoSeconds()).containsKeys(finder1.getClass(), finder2.getClass());
     assertThat(finderBenchmark.benchmarkResultMilliSeconds()).containsKeys(finder1.getClass(), finder2.getClass());
+    System.out.println(finderBenchmark);
   }
 
   @Test
@@ -125,6 +128,7 @@ class ImagePositionFinderBenchmarkTest {
     assertThat(finderBenchmark.at(TEST_IMAGE, TEST_IMAGE, TEST_POSITION.getX(), TEST_POSITION.getY())).isTrue();
     assertThat(finderBenchmark.benchmarkResultNanoSeconds()).containsKeys(finder1.getClass(), finder2.getClass());
     assertThat(finderBenchmark.benchmarkResultMilliSeconds()).containsKeys(finder1.getClass(), finder2.getClass());
+    System.out.println(finderBenchmark);
   }
 
   @Test

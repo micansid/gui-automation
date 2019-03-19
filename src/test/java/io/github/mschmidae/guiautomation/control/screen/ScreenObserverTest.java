@@ -11,10 +11,8 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
-import java.util.Set;
 import java.util.concurrent.ExecutionException;
 import java.util.function.Supplier;
-import java.util.stream.Collectors;
 import java.util.stream.Stream;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.params.ParameterizedTest;
@@ -32,8 +30,8 @@ class ScreenObserverTest {
   private final static Optional<Position> BAD_CASE = Optional.empty();
   private final static Optional<Position> GOOD_CASE = Optional.of(new Position(0, 0));
 
-  private static Stream<TriFunction<Optional<Position>, ScreenObserver,
-      Supplier<Image>, Integer>> waitUntilProvider() {
+  private static Stream<TriFunction<ScreenObserver, Supplier<Image>, Integer,
+      Optional<Position>>> waitUntilProvider() {
     return Stream.of(ScreenObserver::waitUntil,
         (observer, supplier, timeout) -> {
           Optional<Position> result;
@@ -56,8 +54,8 @@ class ScreenObserverTest {
         });
   }
 
-  private static Stream<TriFunction<Optional<Position>, ScreenObserver,
-      Supplier<Image>, Integer>> waitWhileProvider() {
+  private static Stream<TriFunction<ScreenObserver, Supplier<Image>, Integer,
+      Optional<Position>>> waitWhileProvider() {
     return Stream.of(ScreenObserver::waitWhile,
         (observer, supplier, timeout) -> {
           Optional<Position> result;
@@ -72,8 +70,8 @@ class ScreenObserverTest {
 
   @ParameterizedTest
   @MethodSource("waitUntilProvider")
-  void waitUntilScreenImageIsStillPresent(final TriFunction<Optional<Position>, ScreenObserver,
-      Supplier<Image>, Integer> waitUntil) {
+  void waitUntilScreenImageIsStillPresent(final TriFunction<ScreenObserver, Supplier<Image>,
+      Integer, Optional<Position>> waitUntil) {
     Screen screen = mock(Screen.class);
     when(screen.positionOf(any(Supplier.class))).thenReturn(GOOD_CASE);
     when(screen.positionOf(any(List.class))).thenReturn(GOOD_CASE);
@@ -82,8 +80,8 @@ class ScreenObserverTest {
 
   @ParameterizedTest
   @MethodSource("waitUntilProvider")
-  void waitUntilScreenImageIsNotPresent(final TriFunction<Optional<Position>, ScreenObserver,
-      Supplier<Image>, Integer> waitUntil) {
+  void waitUntilScreenImageIsNotPresent(final TriFunction<ScreenObserver, Supplier<Image>, Integer,
+      Optional<Position>> waitUntil) {
     Screen screen = mock(Screen.class);
     when(screen.positionOf(any(Supplier.class))).thenReturn(BAD_CASE);
     when(screen.positionOf(any(List.class))).thenReturn(BAD_CASE);
@@ -92,8 +90,8 @@ class ScreenObserverTest {
 
   @ParameterizedTest
   @MethodSource("waitUntilProvider")
-  void waitUntilScreenImageIsPresentOneSecondTry(final TriFunction<Optional<Position>,
-      ScreenObserver, Supplier<Image>, Integer> waitUntil) {
+  void waitUntilScreenImageIsPresentOneSecondTry(final TriFunction<ScreenObserver, Supplier<Image>,
+      Integer, Optional<Position>> waitUntil) {
     Screen screen = mock(Screen.class);
     when(screen.positionOf(any(Supplier.class)))
         .thenReturn(BAD_CASE)
@@ -106,8 +104,8 @@ class ScreenObserverTest {
 
   @ParameterizedTest
   @MethodSource("waitUntilProvider")
-  void waitUntilScreenImageIsPresentAtLastCheckBeforeTimeout(final TriFunction<Optional<Position>,
-      ScreenObserver, Supplier<Image>, Integer> waitUntil) {
+  void waitUntilScreenImageIsPresentAtLastCheckBeforeTimeout(final TriFunction<ScreenObserver,
+      Supplier<Image>, Integer, Optional<Position>> waitUntil) {
     Screen screen = mock(Screen.class);
     when(screen.positionOf(any(Supplier.class)))
         .thenReturn(BAD_CASE, BAD_CASE)
@@ -120,8 +118,8 @@ class ScreenObserverTest {
 
   @ParameterizedTest
   @MethodSource("waitUntilProvider")
-  void waitUntilScreenImageIsPresentAfterTimeout(final TriFunction<Optional<Position>,
-      ScreenObserver, Supplier<Image>, Integer> waitUntil) {
+  void waitUntilScreenImageIsPresentAfterTimeout(final TriFunction<ScreenObserver, Supplier<Image>,
+      Integer, Optional<Position>> waitUntil) {
     Screen screen = mock(Screen.class);
     when(screen.positionOf(any(Supplier.class)))
         .thenReturn(BAD_CASE, BAD_CASE, BAD_CASE)
@@ -134,8 +132,8 @@ class ScreenObserverTest {
 
   @ParameterizedTest
   @MethodSource("waitWhileProvider")
-  void waitWhileScreenImageIsNotPresent(final TriFunction<Optional<Position>, ScreenObserver,
-      Supplier<Image>, Integer> waitWhile) {
+  void waitWhileScreenImageIsNotPresent(final TriFunction<ScreenObserver, Supplier<Image>, Integer,
+      Optional<Position>> waitWhile) {
     Screen screen = mock(Screen.class);
     when(screen.positionOf(any(Supplier.class))).thenReturn(BAD_CASE);
     assertWaitWhile(waitWhile, screen, 2, true);
@@ -143,8 +141,8 @@ class ScreenObserverTest {
 
   @ParameterizedTest
   @MethodSource("waitWhileProvider")
-  void waitWhileScreenImageIsPresentAtTheTimeout(final TriFunction<Optional<Position>,
-      ScreenObserver, Supplier<Image>, Integer> waitWhile) {
+  void waitWhileScreenImageIsPresentAtTheTimeout(final TriFunction<ScreenObserver, Supplier<Image>,
+      Integer, Optional<Position>> waitWhile) {
     Screen screen = mock(Screen.class);
     when(screen.positionOf(any(Supplier.class))).thenReturn(GOOD_CASE);
     when(screen.imageAt(any(Supplier.class), eq(GOOD_CASE.get())))
@@ -154,8 +152,8 @@ class ScreenObserverTest {
 
   @ParameterizedTest
   @MethodSource("waitWhileProvider")
-  void waitWhileScreenImageIsPresentAtFirstTry(final TriFunction<Optional<Position>, ScreenObserver,
-      Supplier<Image>, Integer> waitWhile) {
+  void waitWhileScreenImageIsPresentAtFirstTry(final TriFunction<ScreenObserver, Supplier<Image>,
+      Integer, Optional<Position>> waitWhile) {
     Screen screen = mock(Screen.class);
     when(screen.positionOf(any(Supplier.class))).thenReturn(GOOD_CASE, BAD_CASE);
     when(screen.imageAt(any(Supplier.class), eq(GOOD_CASE.get())))
@@ -165,8 +163,8 @@ class ScreenObserverTest {
 
   @ParameterizedTest
   @MethodSource("waitWhileProvider")
-  void waitWhileScreenImageIsPresentUntilTimeout(final TriFunction<Optional<Position>,
-      ScreenObserver, Supplier<Image>, Integer> waitWhile) {
+  void waitWhileScreenImageIsPresentUntilTimeout(final TriFunction<ScreenObserver, Supplier<Image>,
+      Integer, Optional<Position>> waitWhile) {
     Screen screen = mock(Screen.class);
     when(screen.positionOf(any(Supplier.class))).thenReturn(GOOD_CASE, BAD_CASE);
     when(screen.imageAt(any(Supplier.class), eq(GOOD_CASE.get())))
@@ -176,8 +174,8 @@ class ScreenObserverTest {
 
   @ParameterizedTest
   @MethodSource("waitWhileProvider")
-  void waitWhileScreenImageIsPresentAfterTimeout(final TriFunction<Optional<Position>,
-      ScreenObserver, Supplier<Image>, Integer> waitWhile) {
+  void waitWhileScreenImageIsPresentAfterTimeout(final TriFunction<ScreenObserver, Supplier<Image>,
+      Integer, Optional<Position>> waitWhile) {
     Screen screen = mock(Screen.class);
     when(screen.positionOf(any(Supplier.class))).thenReturn(GOOD_CASE);
     when(screen.imageAt(any(Supplier.class), eq(GOOD_CASE.get())))
@@ -215,8 +213,8 @@ class ScreenObserverTest {
     assertThat(result).isEmpty();
   }
 
-  private void assertWaitUntil(final TriFunction<Optional<Position>, ScreenObserver,
-      Supplier<Image>, Integer> waitUntil, final Screen screen, final int timeout,
+  private void assertWaitUntil(final TriFunction<ScreenObserver, Supplier<Image>, Integer,
+      Optional<Position>> waitUntil, final Screen screen, final int timeout,
                                final boolean result) {
     Supplier<Long> clock = (Supplier<Long>) mock(Supplier.class);
     when(clock.get()).thenReturn(0L, 1L, 2L, 3L, 4L, 5L, 6L, 7L, 8L, 9L, 10L, 11L, 12L, 13L, 14L, 15L, 16L, 17L, 18L, 19L, 20L);
@@ -231,8 +229,8 @@ class ScreenObserverTest {
     }
   }
 
-  private void assertWaitWhile(final TriFunction<Optional<Position>, ScreenObserver,
-      Supplier<Image>, Integer> waitWhile, final Screen screen, final int timeout,
+  private void assertWaitWhile(final TriFunction<ScreenObserver, Supplier<Image>, Integer,
+      Optional<Position>> waitWhile, final Screen screen, final int timeout,
                                final boolean result) {
     Supplier<Long> clock = (Supplier<Long>) mock(Supplier.class);
     when(clock.get()).thenReturn(0L, 1L, 2L, 3L, 4L, 5L, 6L, 7L, 8L, 9L, 10L, 11L, 12L, 13L, 14L, 15L, 16L, 17L, 18L, 19L, 20L);
