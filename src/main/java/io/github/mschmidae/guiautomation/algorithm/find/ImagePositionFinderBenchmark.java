@@ -13,6 +13,7 @@ import java.util.Map;
 import java.util.Optional;
 import java.util.Set;
 import java.util.function.BiFunction;
+import java.util.stream.Collectors;
 import lombok.AccessLevel;
 import lombok.Getter;
 
@@ -20,7 +21,7 @@ import lombok.Getter;
 public class ImagePositionFinderBenchmark implements ImagePositionFinder {
   private final Map<ImagePositionFinder, StopWatch> benchmarkUnit = new HashMap<>();
 
-  public ImagePositionFinderBenchmark(ImagePositionFinder...  finders) {
+  public ImagePositionFinderBenchmark(final ImagePositionFinder...  finders) {
     Ensure.notEmpty(finders);
     for (ImagePositionFinder finder : finders) {
       getBenchmarkUnit().put(finder, new StopWatch(System::nanoTime));
@@ -28,64 +29,25 @@ public class ImagePositionFinderBenchmark implements ImagePositionFinder {
   }
 
   @Override
-  public Optional<Position> find(Image image, Image pattern) {
-    return runOnEachFinder(ImagePositionFinder::find, image, pattern, "The results of the find method from the ImagePositionFinders differ");
-    /*
-    List<Optional<Position>> results = new ArrayList<>();
-
-    for (Map.Entry<ImagePositionFinder, StopWatch> unit : getBenchmarkUnit().entrySet()) {
-      unit.getValue().start();
-      results.add(unit.getKey().find(image, pattern));
-      unit.getValue().pause();
-    }
-
-    for (Optional<Position> result : results) {
-      if (!result.equals(results.get(0))) {
-        throw new RuntimeException("The results of the find method from the ImagePositionFinders differ");
-      }
-    }
-    return results.get(0);
-    */
+  public Optional<Position> find(final Image image, final Image pattern) {
+    return runOnEachFinder(ImagePositionFinder::find, image, pattern,
+        "The results of the find() method from the ImagePositionFinders differ");
   }
 
   @Override
-  public List<Position> findAll(Image image, Image pattern) {
-    List<List<Position>> results = new ArrayList<>();
-
-    for (Map.Entry<ImagePositionFinder, StopWatch> unit : getBenchmarkUnit().entrySet()) {
-      unit.getValue().start();
-      results.add(unit.getKey().findAll(image, pattern));
-      unit.getValue().pause();
-    }
-
-    for (List<Position> result : results) {
-      if (!result.equals(results.get(0))) {
-        throw new RuntimeException("The results of the findAll method from the ImagePositionFinders differ");
-      }
-    }
-    return results.get(0);
+  public List<Position> findAll(final Image image, final Image pattern) {
+    return runOnEachFinder(ImagePositionFinder::findAll, image, pattern,
+        "The results of the findAll() method from the ImagePositionFinders differ");
   }
 
   @Override
-  public Map<Image, List<Position>> findAll(Image image, Set<Image> patterns) {
-    List<Map<Image, List<Position>>> results = new ArrayList<>();
-
-    for (Map.Entry<ImagePositionFinder, StopWatch> unit : getBenchmarkUnit().entrySet()) {
-      unit.getValue().start();
-      results.add(unit.getKey().findAll(image, patterns));
-      unit.getValue().pause();
-    }
-
-    for (Map<Image, List<Position>> result : results) {
-      if (!result.equals(results.get(0))) {
-        throw new RuntimeException("The results of the findAll method from the ImagePositionFinders differ");
-      }
-    }
-    return results.get(0);
+  public Map<Image, List<Position>> findAll(final Image image, final Set<Image> patterns) {
+    return runOnEachFinder(ImagePositionFinder::findAll, image, patterns,
+        "The results of the findAll() method from the ImagePositionFinders differ");
   }
 
   @Override
-  public boolean at(Image image, Image pattern, Position position) {
+  public boolean at(final Image image, final Image pattern, final Position position) {
     List<Boolean> results = new ArrayList<>();
 
     for (Map.Entry<ImagePositionFinder, StopWatch> unit : getBenchmarkUnit().entrySet()) {
@@ -103,7 +65,8 @@ public class ImagePositionFinderBenchmark implements ImagePositionFinder {
   }
 
   @Override
-  public boolean at(Image image, Image pattern, int positionX, int positionY) {
+  public boolean at(final Image image, final Image pattern, final int positionX,
+                    final int positionY) {
     List<Boolean> results = new ArrayList<>();
 
     for (Map.Entry<ImagePositionFinder, StopWatch> unit : getBenchmarkUnit().entrySet()) {
@@ -122,11 +85,9 @@ public class ImagePositionFinderBenchmark implements ImagePositionFinder {
 
 
   public String result() {
-    String result = "";
-    for (Map.Entry<Class<? extends ImagePositionFinder>, Double> unit : benchmarkResultMilliSeconds().entrySet()) {
-      result += unit.getKey() + " - " + unit.getValue() + "\n";
-    }
-    return result;
+    return benchmarkResultMilliSeconds().entrySet()
+        .stream().map(unit -> unit.getKey() + " - " + unit.getValue())
+        .collect(Collectors.joining("\n"));
   }
 
   @Override
@@ -135,22 +96,19 @@ public class ImagePositionFinderBenchmark implements ImagePositionFinder {
   }
 
   public Map<Class<? extends ImagePositionFinder>, Long> benchmarkResultNanoSeconds() {
-    HashMap<Class<? extends ImagePositionFinder>, Long> result = new HashMap<>();
-    for (Map.Entry<ImagePositionFinder, StopWatch> unit : getBenchmarkUnit().entrySet()) {
-      result.put(unit.getKey().getClass(), unit.getValue().duration());
-    }
-    return result;
+    return getBenchmarkUnit().entrySet().stream()
+        .collect(Collectors.toMap(unit -> unit.getKey().getClass(),
+            unit -> unit.getValue().duration()));
   }
 
   public Map<Class<? extends ImagePositionFinder>, Double> benchmarkResultMilliSeconds() {
-    HashMap<Class<? extends ImagePositionFinder>, Double> result = new HashMap<>();
-    for (Map.Entry<ImagePositionFinder, StopWatch> unit : getBenchmarkUnit().entrySet()) {
-      result.put(unit.getKey().getClass(), ((double)unit.getValue().duration()) / 1_000_000);
-    }
-    return result;
+    return getBenchmarkUnit().entrySet().stream()
+        .collect(Collectors.toMap(unit -> unit.getKey().getClass(),
+            unit -> ((double)unit.getValue().duration()) / 1_000_000));
   }
 
-  private <T, U> U runOnEachFinder(final TriFunction<ImagePositionFinder,Image, T, U> method, final Image image,
+  private <T, U> U runOnEachFinder(final TriFunction<ImagePositionFinder,Image, T, U> method,
+                                   final Image image,
                                    final T parameter, final String message) {
     List<U> results = new ArrayList<>();
 
