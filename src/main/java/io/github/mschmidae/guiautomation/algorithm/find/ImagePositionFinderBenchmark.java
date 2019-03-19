@@ -25,13 +25,7 @@ public class ImagePositionFinderBenchmark implements ImagePositionFinder {
       getBenchmarkUnit().put(finder, new StopWatch(System::nanoTime));
     }
   }
-/*
-  public ImagePositionFinderBenchmark() {
-    this(new SimpleFinder(),
-        new SimpleFinderStream(),
-        new BadCharacterFinder());
-  }
-*/
+
   @Override
   public Optional<Position> find(Image image, Image pattern) {
     List<Optional<Position>> results = new ArrayList<>();
@@ -62,7 +56,7 @@ public class ImagePositionFinderBenchmark implements ImagePositionFinder {
 
     for (List<Position> result : results) {
       if (!result.equals(results.get(0))) {
-        throw new RuntimeException("The results of the find method from the ImagePositionFinders differ");
+        throw new RuntimeException("The results of the findAll method from the ImagePositionFinders differ");
       }
     }
     return results.get(0);
@@ -80,7 +74,7 @@ public class ImagePositionFinderBenchmark implements ImagePositionFinder {
 
     for (Map<Image, List<Position>> result : results) {
       if (!result.equals(results.get(0))) {
-        throw new RuntimeException("The results of the find method from the ImagePositionFinders differ");
+        throw new RuntimeException("The results of the findAll method from the ImagePositionFinders differ");
       }
     }
     return results.get(0);
@@ -98,7 +92,7 @@ public class ImagePositionFinderBenchmark implements ImagePositionFinder {
 
     for (Boolean result : results) {
       if (!result.equals(results.get(0))) {
-        throw new RuntimeException("The results of the find method from the ImagePositionFinders differ");
+        throw new RuntimeException("The results of the at method from the ImagePositionFinders differ");
       }
     }
     return results.get(0);
@@ -116,7 +110,7 @@ public class ImagePositionFinderBenchmark implements ImagePositionFinder {
 
     for (Boolean result : results) {
       if (!result.equals(results.get(0))) {
-        throw new RuntimeException("The results of the find method from the ImagePositionFinders differ");
+        throw new RuntimeException("The results of the at method from the ImagePositionFinders differ");
       }
     }
     return results.get(0);
