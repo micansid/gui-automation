@@ -5,6 +5,9 @@ import io.github.mschmidae.guiautomation.util.function.TriFunction;
 import io.github.mschmidae.guiautomation.util.helper.Ensure;
 import io.github.mschmidae.guiautomation.util.helper.StopWatch;
 import io.github.mschmidae.guiautomation.util.image.Image;
+import io.github.mschmidae.guiautomation.util.image.ImageExporter;
+import java.io.PrintWriter;
+import java.io.StringWriter;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -14,13 +17,22 @@ import java.util.Set;
 import java.util.stream.Collectors;
 import lombok.AccessLevel;
 import lombok.Getter;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 @Getter(AccessLevel.PRIVATE)
 public class ImagePositionFinderBenchmark implements ImagePositionFinder {
+  private final String imageExportPath;
+  private final Logger logger = LoggerFactory.getLogger(getClass());
   private final Map<ImagePositionFinder, StopWatch> benchmarkUnit = new HashMap<>();
 
   public ImagePositionFinderBenchmark(final ImagePositionFinder...  finders) {
+    this(".", finders);
+  }
+  public ImagePositionFinderBenchmark(final String imageExportPath, final ImagePositionFinder...  finders) {
+    Ensure.notNull(imageExportPath);
     Ensure.notEmpty(finders);
+    this.imageExportPath = imageExportPath;
     for (ImagePositionFinder finder : finders) {
       getBenchmarkUnit().put(finder, new StopWatch(System::nanoTime));
     }
@@ -94,7 +106,15 @@ public class ImagePositionFinderBenchmark implements ImagePositionFinder {
 
     for (U result : results) {
       if (!result.equals(results.get(0))) {
-        throw new RuntimeException(message);
+        ImageExporter exporter = new ImageExporter();
+        exporter.export(image,
+            getImageExportPath() + "/"
+                + "ImagePositionFinderBenchmark_error_" + System.currentTimeMillis() + ".png");
+        RuntimeException exception = new RuntimeException(message);
+        StringWriter writer = new StringWriter();
+        exception.printStackTrace(new PrintWriter(writer));
+        getLogger().error(writer.toString());
+        throw exception;
       }
     }
     return results.get(0);

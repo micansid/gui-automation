@@ -43,7 +43,7 @@ class ImagePositionFinderBenchmarkTest {
     when(finder1.find(TEST_IMAGE, TEST_IMAGE)).thenReturn(Optional.of(TEST_POSITION));
     when(finder2.find(TEST_IMAGE, TEST_IMAGE)).thenReturn(Optional.of(new Position(1, 0)));
 
-    ImagePositionFinderBenchmark finderBenchmark = new ImagePositionFinderBenchmark(finder1, finder2);
+    ImagePositionFinderBenchmark finderBenchmark = new ImagePositionFinderBenchmark("target", finder1, finder2);
 
     assertThatThrownBy(() -> finderBenchmark.find(TEST_IMAGE, TEST_IMAGE))
         .isInstanceOf(RuntimeException.class);
@@ -71,7 +71,7 @@ class ImagePositionFinderBenchmarkTest {
     when(finder1.findAll(TEST_IMAGE, TEST_IMAGE)).thenReturn(Arrays.asList(TEST_POSITION));
     when(finder2.findAll(TEST_IMAGE, TEST_IMAGE)).thenReturn(Arrays.asList(new Position(1, 0)));
 
-    ImagePositionFinderBenchmark finderBenchmark = new ImagePositionFinderBenchmark(finder1, finder2);
+    ImagePositionFinderBenchmark finderBenchmark = new ImagePositionFinderBenchmark("target", finder1, finder2);
 
     assertThatThrownBy(() -> finderBenchmark.findAll(TEST_IMAGE, TEST_IMAGE))
         .isInstanceOf(RuntimeException.class);
@@ -107,7 +107,7 @@ class ImagePositionFinderBenchmarkTest {
     when(finder1.findAll(TEST_IMAGE, patternSet)).thenReturn(resultMap);
     when(finder2.findAll(TEST_IMAGE, patternSet)).thenReturn(new HashMap<>());
 
-    ImagePositionFinderBenchmark finderBenchmark = new ImagePositionFinderBenchmark(finder1, finder2);
+    ImagePositionFinderBenchmark finderBenchmark = new ImagePositionFinderBenchmark("target", finder1, finder2);
 
     assertThatThrownBy(() -> finderBenchmark.findAll(TEST_IMAGE, patternSet))
         .isInstanceOf(RuntimeException.class);
@@ -140,7 +140,7 @@ class ImagePositionFinderBenchmarkTest {
     when(finder2.at(TEST_IMAGE, TEST_IMAGE, TEST_POSITION)).thenReturn(false);
     when(finder2.at(TEST_IMAGE, TEST_IMAGE, TEST_POSITION.getX(), TEST_POSITION.getY())).thenReturn(false);
 
-    ImagePositionFinderBenchmark finderBenchmark = new ImagePositionFinderBenchmark(finder1, finder2);
+    ImagePositionFinderBenchmark finderBenchmark = new ImagePositionFinderBenchmark("target", finder1, finder2);
 
     assertThatThrownBy(() -> finderBenchmark.at(TEST_IMAGE, TEST_IMAGE, TEST_POSITION))
         .isInstanceOf(RuntimeException.class);
