@@ -1,5 +1,6 @@
 package io.github.mschmidae.guiautomation.control.mouse;
 
+import io.github.mschmidae.guiautomation.control.AwtRobotCommandExecutor;
 import io.github.mschmidae.guiautomation.util.helper.Ensure;
 
 import java.awt.AWTException;
@@ -10,35 +11,14 @@ import java.util.HashMap;
 import java.util.Map;
 
 
-public class AwtMouseCommandExecutor implements MouseCommandExecutor {
+public class AwtMouseCommandExecutor extends AwtRobotCommandExecutor
+    implements MouseCommandExecutor {
   private static final Map<MouseButton, Integer> MAPPING = new HashMap<>();
 
   static {
     MAPPING.put(MouseButton.LEFT, InputEvent.BUTTON1_MASK);
     MAPPING.put(MouseButton.RIGHT, InputEvent.BUTTON2_MASK);
     MAPPING.put(MouseButton.MIDDLE, InputEvent.BUTTON3_MASK);
-  }
-
-  private final Robot robot;
-
-  /**
-   * Constructor of AwtMouseCommandExecutor.
-   * @throws RuntimeException when the generation of a new Robot fails with an AWTException
-   */
-  public AwtMouseCommandExecutor() {
-    Robot newRobot;
-    System.out.println(GraphicsEnvironment.isHeadless());
-    try {
-      // ToDo just a workaround
-      if (GraphicsEnvironment.isHeadless()) {
-        newRobot = null;
-      } else {
-        newRobot = new Robot();
-      }
-    } catch (AWTException exception) {
-      throw new RuntimeException(exception);
-    }
-    robot = newRobot;
   }
 
   @Override
@@ -63,9 +43,5 @@ public class AwtMouseCommandExecutor implements MouseCommandExecutor {
   @Override
   public void scroll(int notches) {
     getRobot().mouseWheel(notches);
-  }
-
-  private Robot getRobot() {
-    return robot;
   }
 }

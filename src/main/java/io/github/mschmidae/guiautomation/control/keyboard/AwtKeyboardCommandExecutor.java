@@ -1,5 +1,6 @@
 package io.github.mschmidae.guiautomation.control.keyboard;
 
+import io.github.mschmidae.guiautomation.control.AwtRobotCommandExecutor;
 import io.github.mschmidae.guiautomation.util.helper.Ensure;
 import java.awt.AWTException;
 import java.awt.GraphicsEnvironment;
@@ -9,24 +10,9 @@ import lombok.AccessLevel;
 import lombok.Getter;
 
 @Getter(AccessLevel.PRIVATE)
-public class AwtKeyboardCommandExecutor implements KeyboardCommandExecutor {
-  private final Robot robot;
+public class AwtKeyboardCommandExecutor extends AwtRobotCommandExecutor
+    implements KeyboardCommandExecutor {
   private final AwtKeyMapping mapping = new AwtKeyMapping();
-
-  public AwtKeyboardCommandExecutor() {
-    Robot newRobot;
-    try {
-      // ToDo just a workaround
-      if (GraphicsEnvironment.isHeadless()) {
-        newRobot = null;
-      } else {
-        newRobot = new Robot();
-      }
-    } catch (AWTException exception) {
-      throw new RuntimeException(exception);
-    }
-    robot = newRobot;
-  }
 
   @Override
   public void press(Key key) {
