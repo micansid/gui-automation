@@ -22,9 +22,6 @@ public class Controller {
   private final Screen screen;
   private final ScreenObserver screenObserver;
 
-  public Controller() {
-    this(new Clipboard(), new Keyboard(), new Mouse(), new Screen());
-  }
 
   public Controller(final Clipboard clipboard, final Keyboard keyboard, final Mouse mouse,
                      final Screen screen) {
