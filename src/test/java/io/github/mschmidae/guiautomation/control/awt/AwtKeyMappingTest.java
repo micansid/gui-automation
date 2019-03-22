@@ -1,5 +1,7 @@
-package io.github.mschmidae.guiautomation.control.keyboard;
+package io.github.mschmidae.guiautomation.control.awt;
 
+import io.github.mschmidae.guiautomation.control.awt.AwtKeyMapping;
+import io.github.mschmidae.guiautomation.control.keyboard.Key;
 import org.assertj.core.api.SoftAssertions;
 import org.junit.jupiter.api.Test;
 

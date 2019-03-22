@@ -1,4 +1,4 @@
-package io.github.mschmidae.guiautomation.control.mouse;
+package io.github.mschmidae.guiautomation.control.awt;
 
 import io.github.mschmidae.guiautomation.util.Position;
 

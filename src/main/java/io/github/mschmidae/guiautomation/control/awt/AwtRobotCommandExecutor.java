@@ -1,4 +1,4 @@
-package io.github.mschmidae.guiautomation.control;
+package io.github.mschmidae.guiautomation.control.awt;
 
 import java.awt.AWTException;
 import java.awt.Robot;

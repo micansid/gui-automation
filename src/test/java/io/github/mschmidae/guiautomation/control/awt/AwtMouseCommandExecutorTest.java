@@ -1,9 +1,10 @@
-package io.github.mschmidae.guiautomation.control.mouse;
+package io.github.mschmidae.guiautomation.control.awt;
 
+import io.github.mschmidae.guiautomation.control.awt.AwtMouseCommandExecutor;
+import io.github.mschmidae.guiautomation.control.mouse.MouseButton;
+import io.github.mschmidae.guiautomation.control.mouse.MouseCommandExecutor;
 import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.Test;
-
-import static org.junit.jupiter.api.Assertions.*;
 
 class AwtMouseCommandExecutorTest {
   @Disabled

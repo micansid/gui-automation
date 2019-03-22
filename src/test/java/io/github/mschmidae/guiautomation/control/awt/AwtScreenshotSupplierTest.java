@@ -1,5 +1,6 @@
-package io.github.mschmidae.guiautomation.control.screen;
+package io.github.mschmidae.guiautomation.control.awt;
 
+import io.github.mschmidae.guiautomation.control.awt.AwtScreenshotSupplier;
 import io.github.mschmidae.guiautomation.util.image.Image;
 import io.github.mschmidae.guiautomation.util.image.ImageExporter;
 import java.util.function.Supplier;

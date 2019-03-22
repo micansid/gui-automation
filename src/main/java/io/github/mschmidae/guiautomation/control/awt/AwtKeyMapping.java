@@ -1,5 +1,6 @@
-package io.github.mschmidae.guiautomation.control.keyboard;
+package io.github.mschmidae.guiautomation.control.awt;
 
+import io.github.mschmidae.guiautomation.control.keyboard.Key;
 import io.github.mschmidae.guiautomation.util.helper.Ensure;
 import java.awt.event.KeyEvent;
 import java.util.HashMap;

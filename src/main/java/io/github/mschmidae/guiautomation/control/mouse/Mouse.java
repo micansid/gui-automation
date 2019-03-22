@@ -1,12 +1,13 @@
 package io.github.mschmidae.guiautomation.control.mouse;
 
+import io.github.mschmidae.guiautomation.control.awt.AwtMouseCommandExecutor;
+import io.github.mschmidae.guiautomation.control.awt.AwtMousePositionSupplier;
 import io.github.mschmidae.guiautomation.util.Position;
 import io.github.mschmidae.guiautomation.util.helper.Ensure;
 import java.util.function.Supplier;
 import lombok.AccessLevel;
 import lombok.Getter;
 import lombok.Setter;
-import lombok.experimental.Accessors;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 

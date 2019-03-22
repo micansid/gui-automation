@@ -1,5 +1,6 @@
 package io.github.mschmidae.guiautomation.control.keyboard;
 
+import io.github.mschmidae.guiautomation.control.awt.AwtKeyboardCommandExecutor;
 import io.github.mschmidae.guiautomation.util.helper.Ensure;
 import java.util.function.Consumer;
 import lombok.AccessLevel;

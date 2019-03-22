@@ -1,11 +1,9 @@
-package io.github.mschmidae.guiautomation.control.mouse;
+package io.github.mschmidae.guiautomation.control.awt;
 
-import io.github.mschmidae.guiautomation.control.AwtRobotCommandExecutor;
+import io.github.mschmidae.guiautomation.control.mouse.MouseButton;
+import io.github.mschmidae.guiautomation.control.mouse.MouseCommandExecutor;
 import io.github.mschmidae.guiautomation.util.helper.Ensure;
 
-import java.awt.AWTException;
-import java.awt.GraphicsEnvironment;
-import java.awt.Robot;
 import java.awt.event.InputEvent;
 import java.util.HashMap;
 import java.util.Map;

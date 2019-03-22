@@ -1,5 +1,6 @@
 package io.github.mschmidae.guiautomation.control.clipboard;
 
+import io.github.mschmidae.guiautomation.control.awt.AwtClipboardCommandExecutor;
 import io.github.mschmidae.guiautomation.util.helper.Ensure;
 import java.util.Optional;
 import java.util.function.Consumer;

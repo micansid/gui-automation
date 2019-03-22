@@ -1,6 +1,6 @@
-package io.github.mschmidae.guiautomation.control.clipboard;
+package io.github.mschmidae.guiautomation.control.awt;
 
-import io.github.mschmidae.guiautomation.control.keyboard.Key;
+import io.github.mschmidae.guiautomation.control.awt.AwtClipboardCommandExecutor;
 import io.github.mschmidae.guiautomation.control.keyboard.Keyboard;
 import io.github.mschmidae.guiautomation.control.keyboard.Shortcut;
 import org.junit.jupiter.api.Disabled;

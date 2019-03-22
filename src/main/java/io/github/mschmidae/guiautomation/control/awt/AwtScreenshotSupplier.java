@@ -1,4 +1,4 @@
-package io.github.mschmidae.guiautomation.control.screen;
+package io.github.mschmidae.guiautomation.control.awt;
 
 import io.github.mschmidae.guiautomation.util.image.Image;
 
@@ -25,7 +25,7 @@ public class AwtScreenshotSupplier implements Supplier<Image> {
         .map(bounds -> bounds.y + bounds.height)
         .max(Comparator.comparingInt(i -> i)).orElse(0);
 
-    BufferedImage image = null;
+    BufferedImage image;
     try {
       Robot robot = new Robot();
       Rectangle rectangle = new Rectangle(0, 0, width, height);

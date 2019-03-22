@@ -1,5 +1,6 @@
-package io.github.mschmidae.guiautomation.control.clipboard;
+package io.github.mschmidae.guiautomation.control.awt;
 
+import io.github.mschmidae.guiautomation.control.clipboard.ClipboardCommandExecutor;
 import java.awt.Toolkit;
 import java.awt.datatransfer.Clipboard;
 import java.awt.datatransfer.ClipboardOwner;

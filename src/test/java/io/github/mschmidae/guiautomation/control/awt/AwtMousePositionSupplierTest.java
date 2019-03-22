@@ -1,5 +1,8 @@
-package io.github.mschmidae.guiautomation.control.mouse;
+package io.github.mschmidae.guiautomation.control.awt;
 
+import io.github.mschmidae.guiautomation.control.awt.AwtMouseCommandExecutor;
+import io.github.mschmidae.guiautomation.control.awt.AwtMousePositionSupplier;
+import io.github.mschmidae.guiautomation.control.mouse.MouseCommandExecutor;
 import io.github.mschmidae.guiautomation.util.Position;
 import java.util.function.Supplier;
 import org.junit.jupiter.api.Disabled;
