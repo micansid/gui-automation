@@ -3,6 +3,7 @@ package io.github.mschmidae.guiautomation.control.mouse;
 import io.github.mschmidae.guiautomation.util.helper.Ensure;
 
 import java.awt.AWTException;
+import java.awt.GraphicsEnvironment;
 import java.awt.Robot;
 import java.awt.event.InputEvent;
 import java.util.HashMap;
@@ -26,8 +27,14 @@ public class AwtMouseCommandExecutor implements MouseCommandExecutor {
    */
   public AwtMouseCommandExecutor() {
     Robot newRobot;
+    System.out.println(GraphicsEnvironment.isHeadless());
     try {
-      newRobot = new Robot();
+      // ToDo just a workaround
+      if (GraphicsEnvironment.isHeadless()) {
+        newRobot = null;
+      } else {
+        newRobot = new Robot();
+      }
     } catch (AWTException exception) {
       throw new RuntimeException(exception);
     }

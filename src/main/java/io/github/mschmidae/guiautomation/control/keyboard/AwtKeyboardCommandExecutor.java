@@ -2,6 +2,8 @@ package io.github.mschmidae.guiautomation.control.keyboard;
 
 import io.github.mschmidae.guiautomation.util.helper.Ensure;
 import java.awt.AWTException;
+import java.awt.GraphicsEnvironment;
+import java.awt.HeadlessException;
 import java.awt.Robot;
 import lombok.AccessLevel;
 import lombok.Getter;
@@ -14,7 +16,12 @@ public class AwtKeyboardCommandExecutor implements KeyboardCommandExecutor {
   public AwtKeyboardCommandExecutor() {
     Robot newRobot;
     try {
-      newRobot = new Robot();
+      // ToDo just a workaround
+      if (GraphicsEnvironment.isHeadless()) {
+        newRobot = null;
+      } else {
+        newRobot = new Robot();
+      }
     } catch (AWTException exception) {
       throw new RuntimeException(exception);
     }

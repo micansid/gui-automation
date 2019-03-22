@@ -36,7 +36,7 @@ public class Mouse {
     Ensure.notNull(positionSupplier);
     this.executor = executor;
     this.positionSupplier = positionSupplier;
-    lastMovePosition = positionSupplier.get();
+    lastMovePosition = new Position(0, 0);
   }
 
 
