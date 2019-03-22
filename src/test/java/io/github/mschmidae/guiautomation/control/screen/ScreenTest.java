@@ -15,7 +15,7 @@ import static org.assertj.core.api.Assertions.assertThat;
 class ScreenTest {
   @Test
   void positionOfCommitButton() {
-    Screen sut = new Screen(FinderTestData.SCREEN);
+    Screen sut = new ScreenBuilder().setScreenSupplier(FinderTestData.SCREEN).build();
 
     assertThat(sut.positionOf(FinderTestData.BUTTON_COMMIT))
         .isPresent()
@@ -26,7 +26,7 @@ class ScreenTest {
 
   @Test
   void positionOfCommitButtonInSection() {
-    Screen sut = new Screen(FinderTestData.SCREEN);
+    Screen sut = new ScreenBuilder().setScreenSupplier(FinderTestData.SCREEN).build();
     Section section = new Section(FinderTestData.BUTTON_COMMIT.getPositions().get(0),
         FinderTestData.BUTTON_COMMIT.getImage().getWidth(),
         FinderTestData.BUTTON_COMMIT.getImage().getHeight());
@@ -38,7 +38,7 @@ class ScreenTest {
 
   @Test
   void positionOfCommitButtonNotInSection() {
-    Screen sut = new Screen(FinderTestData.SCREEN);
+    Screen sut = new ScreenBuilder().setScreenSupplier(FinderTestData.SCREEN).build();
     Section section = new Section(FinderTestData.BUTTON_COMMIT.getPositions()
         .get(0).move(-1, -1),
         FinderTestData.BUTTON_COMMIT.getImage().getWidth(),
@@ -50,7 +50,7 @@ class ScreenTest {
 
   @Test
   void positionOfListReturnsPositionOfFirstImage() {
-    Screen sut = new Screen(FinderTestData.SCREEN);
+    Screen sut = new ScreenBuilder().setScreenSupplier(FinderTestData.SCREEN).build();
     List<Supplier<Image>> pattern = Arrays.asList(FinderTestData.BUTTON_CANCEL,
         FinderTestData.BUTTON_HELP, FinderTestData.BUTTON_COMMIT);
 
@@ -61,7 +61,7 @@ class ScreenTest {
 
   @Test
   void positionOfListReturnsPositionOfFirstImageInSection() {
-    Screen sut = new Screen(FinderTestData.SCREEN);
+    Screen sut = new ScreenBuilder().setScreenSupplier(FinderTestData.SCREEN).build();
     List<Supplier<Image>> pattern = Arrays.asList(FinderTestData.BUTTON_COMMIT,
         FinderTestData.BUTTON_CANCEL, FinderTestData.BUTTON_HELP);
     Section section = new Section(new Position(500, 0), new Position(770, 826));
@@ -74,7 +74,7 @@ class ScreenTest {
 
   @Test
   void positionsOfUncheckedCheckboxes() {
-    Screen sut = new Screen(FinderTestData.SCREEN);
+    Screen sut = new ScreenBuilder().setScreenSupplier(FinderTestData.SCREEN).build();
 
     assertThat(sut.positionsOf(FinderTestData.CHECKBOX_UNCHECKED))
         .isEqualTo(FinderTestData.CHECKBOX_UNCHECKED.getPositions());
@@ -82,7 +82,7 @@ class ScreenTest {
 
   @Test
   void positionsOfUncheckedCheckboxesInSection() {
-    Screen sut = new Screen(FinderTestData.SCREEN);
+    Screen sut = new ScreenBuilder().setScreenSupplier(FinderTestData.SCREEN).build();
     Section section = new Section(new Position(474, 0), new Position(770, 826));
 
     assertThat(sut.positionsOf(FinderTestData.CHECKBOX_UNCHECKED, section))
@@ -92,7 +92,7 @@ class ScreenTest {
 
   @Test
   void positionsOfDifferentPatterns() {
-    Screen sut = new Screen(FinderTestData.SCREEN);
+    Screen sut = new ScreenBuilder().setScreenSupplier(FinderTestData.SCREEN).build();
     Set<Supplier<Image>> patternSuppliers = new HashSet<>();
     patternSuppliers.add(FinderTestData.CHECKBOX_CHECKED);
     patternSuppliers.add(FinderTestData.CHECKBOX_UNCHECKED);
@@ -112,7 +112,7 @@ class ScreenTest {
 
   @Test
   void positionsOfDifferentPatternsInSection() {
-    Screen sut = new Screen(FinderTestData.SCREEN);
+    Screen sut = new ScreenBuilder().setScreenSupplier(FinderTestData.SCREEN).build();
     Set<Supplier<Image>> patternSuppliers = new HashSet<>();
     patternSuppliers.add(FinderTestData.CHECKBOX_CHECKED);
     patternSuppliers.add(FinderTestData.CHECKBOX_UNCHECKED);
@@ -135,7 +135,7 @@ class ScreenTest {
 
   @Test
   void clickPositionOfCommitButton() {
-    Screen sut = new Screen(FinderTestData.SCREEN);
+    Screen sut = new ScreenBuilder().setScreenSupplier(FinderTestData.SCREEN).build();
 
     assertThat(sut.clickPositionOf(FinderTestData.BUTTON_COMMIT))
         .isPresent()
@@ -144,7 +144,7 @@ class ScreenTest {
 
   @Test
   void clickPositionOfCommitButtonInSection() {
-    Screen sut = new Screen(FinderTestData.SCREEN);
+    Screen sut = new ScreenBuilder().setScreenSupplier(FinderTestData.SCREEN).build();
     Section section = new Section(FinderTestData.BUTTON_COMMIT.getPositions().get(0),
         FinderTestData.BUTTON_COMMIT.getImage().getWidth(),
         FinderTestData.BUTTON_COMMIT.getImage().getHeight());
@@ -156,7 +156,7 @@ class ScreenTest {
 
   @Test
   void clickPositionOfCommitButtonNotInSection() {
-    Screen sut = new Screen(FinderTestData.SCREEN);
+    Screen sut = new ScreenBuilder().setScreenSupplier(FinderTestData.SCREEN).build();
     Section section = new Section(FinderTestData.BUTTON_COMMIT.getPositions()
         .get(0).move(-1, -1),
         FinderTestData.BUTTON_COMMIT.getImage().getWidth(),
@@ -168,7 +168,7 @@ class ScreenTest {
 
   @Test
   void clickPositionOfListReturnsPositionOfFirstImage() {
-    Screen sut = new Screen(FinderTestData.SCREEN);
+    Screen sut = new ScreenBuilder().setScreenSupplier(FinderTestData.SCREEN).build();
     List<Supplier<Image>> pattern = Arrays.asList(FinderTestData.BUTTON_CANCEL,
         FinderTestData.BUTTON_HELP, FinderTestData.BUTTON_COMMIT);
 
@@ -179,7 +179,7 @@ class ScreenTest {
 
   @Test
   void clickPositionOfListReturnsPositionOfFirstImageInSection() {
-    Screen sut = new Screen(FinderTestData.SCREEN);
+    Screen sut = new ScreenBuilder().setScreenSupplier(FinderTestData.SCREEN).build();
     List<Supplier<Image>> pattern = Arrays.asList(FinderTestData.BUTTON_COMMIT,
         FinderTestData.BUTTON_CANCEL, FinderTestData.BUTTON_HELP);
     Section section = new Section(new Position(500, 0), new Position(770, 826));
@@ -191,7 +191,7 @@ class ScreenTest {
 
   @Test
   void clickPositionsOfUncheckedCheckboxes() {
-    Screen sut = new Screen(FinderTestData.SCREEN);
+    Screen sut = new ScreenBuilder().setScreenSupplier(FinderTestData.SCREEN).build();
     assertThat(sut.clickPositionsOf(FinderTestData.CHECKBOX_UNCHECKED))
         .isEqualTo(FinderTestData.CHECKBOX_UNCHECKED.getPositions()
             .stream().map(position -> position.move(7, 7))
@@ -200,7 +200,7 @@ class ScreenTest {
 
   @Test
   void clickPositionsOfUncheckedCheckboxesInSection() {
-    Screen sut = new Screen(FinderTestData.SCREEN);
+    Screen sut = new ScreenBuilder().setScreenSupplier(FinderTestData.SCREEN).build();
     Section section = new Section(new Position(474, 0), new Position(770, 826));
 
     assertThat(sut.clickPositionsOf(FinderTestData.CHECKBOX_UNCHECKED, section))
@@ -211,7 +211,7 @@ class ScreenTest {
 
   @Test
   void clickPositionsOfDifferentPatterns() {
-    Screen sut = new Screen(FinderTestData.SCREEN);
+    Screen sut = new ScreenBuilder().setScreenSupplier(FinderTestData.SCREEN).build();
     Set<Supplier<Image>> patternSuppliers = new HashSet<>();
     patternSuppliers.add(FinderTestData.CHECKBOX_CHECKED);
     patternSuppliers.add(FinderTestData.CHECKBOX_UNCHECKED);
@@ -237,7 +237,7 @@ class ScreenTest {
 
   @Test
   void clickPositionsOfDifferentPatternsInSection() {
-    Screen sut = new Screen(FinderTestData.SCREEN);
+    Screen sut = new ScreenBuilder().setScreenSupplier(FinderTestData.SCREEN).build();
     Set<Supplier<Image>> patternSuppliers = new HashSet<>();
     patternSuppliers.add(FinderTestData.CHECKBOX_CHECKED);
     patternSuppliers.add(FinderTestData.CHECKBOX_UNCHECKED);
@@ -263,14 +263,14 @@ class ScreenTest {
 
   @Test
   void heightAndWidthOfTheScreenImageSupplier() {
-    Screen sut = new Screen(FinderTestData.SCREEN);
+    Screen sut = new ScreenBuilder().setScreenSupplier(FinderTestData.SCREEN).build();
     assertThat(sut.width()).isEqualTo(771);
     assertThat(sut.height()).isEqualTo(827);
   }
 
   @Test
   void imagesAtOneOfTheSpecifiedPositionAllPresent() {
-    Screen sut = new Screen(FinderTestData.SCREEN);
+    Screen sut = new ScreenBuilder().setScreenSupplier(FinderTestData.SCREEN).build();
     Map<Image, List<Position>> positions = new HashMap<>();
     positions.put(FinderTestData.BUTTON_COMMIT.getImage(),
         FinderTestData.BUTTON_COMMIT.getPositions());
@@ -282,7 +282,7 @@ class ScreenTest {
 
   @Test
   void imagesAtAllSpecifiedPositionArePresent() {
-    Screen sut = new Screen(FinderTestData.SCREEN);
+    Screen sut = new ScreenBuilder().setScreenSupplier(FinderTestData.SCREEN).build();
     Map<Image, List<Position>> positions = new HashMap<>();
     positions.put(FinderTestData.BUTTON_COMMIT.getImage(),
         FinderTestData.BUTTON_COMMIT.getPositions());
@@ -294,7 +294,7 @@ class ScreenTest {
 
   @Test
   void imagesAtOneOfTheSpecifiedPositionOneOfManyMissing() {
-    Screen sut = new Screen(FinderTestData.SCREEN);
+    Screen sut = new ScreenBuilder().setScreenSupplier(FinderTestData.SCREEN).build();
     Map<Image, List<Position>> positions = new HashMap<>();
     positions.put(FinderTestData.BUTTON_COMMIT.getImage(),
         FinderTestData.BUTTON_COMMIT.getPositions());
@@ -308,7 +308,7 @@ class ScreenTest {
 
   @Test
   void imagesAtAllSpecifiedPositionOneOfManyMissing() {
-    Screen sut = new Screen(FinderTestData.SCREEN);
+    Screen sut = new ScreenBuilder().setScreenSupplier(FinderTestData.SCREEN).build();
     Map<Image, List<Position>> positions = new HashMap<>();
     positions.put(FinderTestData.BUTTON_COMMIT.getImage(),
         FinderTestData.BUTTON_COMMIT.getPositions());
@@ -322,7 +322,7 @@ class ScreenTest {
 
   @Test
   void imagesAtOneOfTheSpecifiedPositionOneMissing() {
-    Screen sut = new Screen(FinderTestData.SCREEN);
+    Screen sut = new ScreenBuilder().setScreenSupplier(FinderTestData.SCREEN).build();
     Map<Image, List<Position>> positions = new HashMap<>();
     positions.put(FinderTestData.BUTTON_COMMIT.getImage(),
         Arrays.asList(new Position(0, 0)));
@@ -335,7 +335,7 @@ class ScreenTest {
 
   @Test
   void imagesAtAllSpecifiedPositionOneMissing() {
-    Screen sut = new Screen(FinderTestData.SCREEN);
+    Screen sut = new ScreenBuilder().setScreenSupplier(FinderTestData.SCREEN).build();
     Map<Image, List<Position>> positions = new HashMap<>();
     positions.put(FinderTestData.BUTTON_COMMIT.getImage(),
         Arrays.asList(new Position(0, 0)));

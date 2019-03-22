@@ -20,14 +20,6 @@ public class Screen implements Supplier<Image> {
   private final Supplier<Image> screenSupplier;
   private final ImagePositionFinder finder;
 
-  public Screen() {
-    this(new AwtScreenshotSupplier());
-  }
-
-  public Screen(final Supplier<Image> screenSupplier) {
-    this(new SimpleFinder(), screenSupplier);
-  }
-
 
   /**
    * Constructor which injects the dependencies of a Screen.

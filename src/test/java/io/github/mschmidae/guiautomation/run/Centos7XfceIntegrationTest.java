@@ -1,6 +1,7 @@
 package io.github.mschmidae.guiautomation.run;
 
 import io.github.mschmidae.guiautomation.control.Controller;
+import io.github.mschmidae.guiautomation.control.ControllerBuilder;
 import io.github.mschmidae.guiautomation.control.keyboard.Key;
 import io.github.mschmidae.guiautomation.control.keyboard.Keyboard;
 import io.github.mschmidae.guiautomation.control.keyboard.Shortcut;
@@ -16,7 +17,7 @@ class Centos7XfceIntegrationTest {
 
   @Test
   void openNotepadTypeTextCopyToClipboard() throws InterruptedException {
-    Controller controller = new Controller();
+    Controller controller = new ControllerBuilder().build();
 
     openNotepad(controller.keyboard());
 
@@ -35,7 +36,7 @@ class Centos7XfceIntegrationTest {
 
   @Test
   void openNotepadInsertFromClipboardModifyTextCopyToClipboard() throws InterruptedException {
-    Controller controller = new Controller();
+    Controller controller = new ControllerBuilder().build();
 
     openNotepad(controller.keyboard());
 

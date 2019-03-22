@@ -31,8 +31,10 @@ class ControllerTest {
     KeyboardCommandExecutor executor = mock(KeyboardCommandExecutor.class);
     Clipboard clipboard = mock(Clipboard.class);
 
-    Controller sut = new Controller(clipboard, new Keyboard(executor), mock(Mouse.class),
-        mock(Screen.class));
+    Controller sut = new ControllerBuilder()
+        .setClipboard(clipboard)
+        .setKeyboard(new Keyboard(executor))
+        .build();
 
     sut.pasteText("test");
     verify(clipboard).set("test");
@@ -49,8 +51,11 @@ class ControllerTest {
     KeyboardCommandExecutor executor = mock(KeyboardCommandExecutor.class);
     Clipboard clipboard = mock(Clipboard.class);
 
-    Controller sut = new Controller(clipboard, new Keyboard(executor), mock(Mouse.class),
-        mock(Screen.class));
+    Controller sut = new ControllerBuilder()
+        .setClipboard(clipboard)
+        .setKeyboard(new Keyboard(executor))
+        .build();
+
     when(clipboard.get()).thenReturn(Optional.of("test"));
 
     assertThat(sut.copyText()).isPresent().contains("test");
@@ -71,8 +76,12 @@ class ControllerTest {
     Mouse mouse = new Mouse(executor, () -> clickPosition);
     Screen screen = mock(Screen.class);
 
+    Controller sut = new ControllerBuilder()
+        .setMouse(mouse)
+        .setScreen(screen)
+        .build();
+
     when(screen.clickPositionOf(any(Supplier.class))).thenReturn(Optional.of(clickPosition));
-    Controller sut = new Controller(mock(Clipboard.class), mock(Keyboard.class), mouse, screen);
 
     Optional<Position> result = sut.clickButton(() -> new Image(new int[]{0}, 1, 1));
 
@@ -91,8 +100,12 @@ class ControllerTest {
     Mouse mouse = new Mouse(executor, () -> new Position(3, 4));
     Screen screen = mock(Screen.class);
 
+    Controller sut = new ControllerBuilder()
+        .setMouse(mouse)
+        .setScreen(screen)
+        .build();
+
     when(screen.clickPositionOf(any(Supplier.class))).thenReturn(Optional.of(clickPosition));
-    Controller sut = new Controller(mock(Clipboard.class), mock(Keyboard.class), mouse, screen);
 
     Optional<Position> result = sut.clickButton(() -> new Image(new int[]{0}, 1, 1));
 
@@ -108,7 +121,10 @@ class ControllerTest {
     Mouse mouse = new Mouse(executor, () -> new Position(0, 0));
     Screen screen = mock(Screen.class);
 
-    Controller sut = new Controller(mock(Clipboard.class), mock(Keyboard.class), mouse, screen);
+    Controller sut = new ControllerBuilder()
+        .setMouse(mouse)
+        .setScreen(screen)
+        .build();
 
     Optional<Position> result = sut.clickButton(() -> new Image(new int[]{0}, 1, 1));
 

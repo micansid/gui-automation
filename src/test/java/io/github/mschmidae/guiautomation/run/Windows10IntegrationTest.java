@@ -1,6 +1,7 @@
 package io.github.mschmidae.guiautomation.run;
 
 import io.github.mschmidae.guiautomation.control.Controller;
+import io.github.mschmidae.guiautomation.control.ControllerBuilder;
 import io.github.mschmidae.guiautomation.control.keyboard.Key;
 import io.github.mschmidae.guiautomation.control.keyboard.Shortcut;
 import org.junit.jupiter.api.Disabled;
@@ -15,7 +16,7 @@ class Windows10IntegrationTest {
 
   @Test
   void openNotepadTypeTextCopyToClipboard() throws InterruptedException {
-    Controller controller = new Controller();
+    Controller controller = new ControllerBuilder().build();
 
     controller.keyboard().press(Key.WINDOWS).input(Key.R).release(Key.WINDOWS);
     Thread.sleep(SLEEP_TIME);
@@ -36,7 +37,7 @@ class Windows10IntegrationTest {
 
   @Test
   void openNotepadInsertFromClipboardModifyTextCopyToClipboard() throws InterruptedException {
-    Controller controller = new Controller();
+    Controller controller = new ControllerBuilder().build();
 
     controller.keyboard().press(Key.WINDOWS).input(Key.R).release(Key.WINDOWS);
     Thread.sleep(SLEEP_TIME);
