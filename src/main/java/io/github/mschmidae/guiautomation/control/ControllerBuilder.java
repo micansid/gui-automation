@@ -20,25 +20,25 @@ public class ControllerBuilder {
     return new Controller(getClipboard(), getKeyboard(), getMouse(), getScreen());
   }
 
-  private ControllerBuilder setClipboard(final Clipboard clipboard) {
+  public ControllerBuilder setClipboard(final Clipboard clipboard) {
     Ensure.notNull(clipboard);
     this.clipboard = clipboard;
     return this;
   }
 
-  private ControllerBuilder setKeyboard(final Keyboard keyboard) {
+  public ControllerBuilder setKeyboard(final Keyboard keyboard) {
     Ensure.notNull(keyboard);
     this.keyboard = keyboard;
     return this;
   }
 
-  private ControllerBuilder setMouse(final Mouse mouse) {
+  public ControllerBuilder setMouse(final Mouse mouse) {
     Ensure.notNull(mouse);
     this.mouse = mouse;
     return this;
   }
 
-  private ControllerBuilder setScreen(final Screen screen) {
+  public ControllerBuilder setScreen(final Screen screen) {
     Ensure.notNull(screen);
     this.screen = screen;
     return this;
