@@ -156,11 +156,22 @@ public class Image implements Supplier<Image> {
     return getAlpha(position.getX(), position.getY());
   }
 
+  /**
+   * Check if coordinate is transparent, identified by alpha 0.
+   * @param x coordinate
+   * @param y coordinate
+   * @return true if alpha of this coordinate is 0
+   */
   public boolean isTransparent(final int x, final int y) {
     ensureCoordinates(x, y);
     return getAlpha(x, y) == 0;
   }
 
+  /**
+   * Check if position is transparent, identified by alpha 0.
+   * @param position to check
+   * @return true if alpha of this position is 0
+   */
   public boolean isTransparent(final Position position) {
     Ensure.notNull(position);
     return isTransparent(position.getX(), position.getY());
