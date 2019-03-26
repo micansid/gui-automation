@@ -5,6 +5,7 @@ import io.github.mschmidae.guiautomation.control.keyboard.Keyboard;
 import io.github.mschmidae.guiautomation.control.mouse.Mouse;
 import io.github.mschmidae.guiautomation.control.screen.Screen;
 import io.github.mschmidae.guiautomation.control.screen.ScreenBuilder;
+import io.github.mschmidae.guiautomation.control.screen.ScreenObserver;
 import io.github.mschmidae.guiautomation.util.helper.Ensure;
 import java.util.function.Supplier;
 import lombok.AccessLevel;
@@ -17,7 +18,7 @@ public class ControllerBuilder {
   private Mouse mouse = new Mouse();
   private Screen screen = new ScreenBuilder().build();
   private Supplier<Long> observerClock = System::currentTimeMillis;
-  private int observerRefreshInterval = 500;
+  private int observerRefreshInterval = ScreenObserver.DEFAULT_REFRESH_INTERVAL;
 
   public Controller build() {
     return new Controller(getClipboard(), getKeyboard(), getMouse(), getScreen(),
