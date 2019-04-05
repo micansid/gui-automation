@@ -21,12 +21,22 @@ public class ImageLoader {
 
   /**
    * Load a image from the resources directory.
+   *
    * @param path of the image to loadFromResources
    * @return BufferedImage when the image exists, else an empty optional
    */
   public Optional<BufferedImage> loadBufferedImageFromResources(final String path) {
     Ensure.notBlank(path);
-    return load(getClass().getResourceAsStream("/" + path));
+
+    Optional<BufferedImage> result = Optional.empty();
+
+    try (InputStream inputStream = getClass().getResourceAsStream("/" + path)) {
+      result = load(inputStream);
+    } catch (IOException exception) {
+      getLogger().error(exception.getMessage());
+      // return empty optional
+    }
+    return result;
   }
 
   public Optional<Image> loadFromResources(final String path) {
@@ -38,9 +48,9 @@ public class ImageLoader {
 
     Optional<BufferedImage> result = Optional.empty();
 
-    try {
-      result = load(new BufferedInputStream(new FileInputStream(path)));
-    } catch (FileNotFoundException exception) {
+    try (InputStream inputStream = new BufferedInputStream(new FileInputStream(path))) {
+      result = load(inputStream);
+    } catch (IOException exception) {
       getLogger().error(exception.getMessage());
       // return empty optional
     }
@@ -52,15 +62,7 @@ public class ImageLoader {
     return loadBufferedImage(path).map(Image::new);
   }
 
-  private Optional<BufferedImage> load(final InputStream inputStream) {
-    Optional<BufferedImage> result = Optional.empty();
-    try {
-      BufferedImage bufferedImage = ImageIO.read(inputStream);
-      result = Optional.of(bufferedImage);
-    } catch (IOException exception) {
-      getLogger().error(exception.getMessage());
-      // return empty optional
-    }
-    return result;
+  private Optional<BufferedImage> load(final InputStream inputStream) throws IOException {
+    return Optional.of(ImageIO.read(inputStream));
   }
 }
