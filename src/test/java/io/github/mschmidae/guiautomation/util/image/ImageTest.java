@@ -16,6 +16,9 @@ class ImageTest {
   private static final BufferedImage IMAGE_CANCEL_BUTTON = new ImageLoader()
       .loadBufferedImageFromResources("intellij_button_cancel.png")
       .orElseThrow(() -> new RuntimeException("The test image ist not available"));
+  private static final BufferedImage IMAGE_BUTTON_FRAME = new ImageLoader()
+      .loadBufferedImageFromResources("intellij_button_frame.png")
+      .orElseThrow(() -> new RuntimeException("The test image ist not available"));
 
   @Test
   void returnsSameRGBWidthHeightAsBufferedImage() {
@@ -39,6 +42,22 @@ class ImageTest {
         assertThat(sut.getAlpha(x, y)).isEqualTo(new Color(bufferedImageRgb, true).getAlpha());
         assertThat(sut.getAlpha(new Position(x, y)))
             .isEqualTo(new Color(bufferedImageRgb, true).getAlpha());
+      }
+    }
+  }
+
+  @Test
+  void rgb0IsTransparent() {
+    Image sut = new Image(IMAGE_BUTTON_FRAME);
+    assertThat(sut.getWidth()).isEqualTo(IMAGE_BUTTON_FRAME.getWidth());
+    assertThat(sut.getHeight()).isEqualTo(IMAGE_BUTTON_FRAME.getHeight());
+    for (int y = 0; y < IMAGE_BUTTON_FRAME.getHeight(); y++) {
+      for (int x = 0; x < IMAGE_BUTTON_FRAME.getWidth(); x++) {
+        if (new Color(IMAGE_BUTTON_FRAME.getRGB(x, y), true).getAlpha() == 0) {
+          assertThat(sut.isTransparent(new Position(x, y))).isTrue();
+        } else {
+          assertThat(sut.isTransparent(new Position(x, y))).isFalse();
+        }
       }
     }
   }

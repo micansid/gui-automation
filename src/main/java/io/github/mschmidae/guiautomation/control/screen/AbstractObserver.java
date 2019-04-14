@@ -9,6 +9,7 @@ import lombok.Getter;
 
 @Getter(AccessLevel.PRIVATE)
 public abstract class AbstractObserver {
+  @Getter(AccessLevel.PUBLIC)
   private final Supplier<Long> clock;
 
   protected AbstractObserver(final Supplier<Long> clock) {

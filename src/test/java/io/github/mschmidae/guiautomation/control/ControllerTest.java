@@ -131,4 +131,35 @@ class ControllerTest {
     assertThat(result).isEmpty();
     verifyNoMoreInteractions(executor);
   }
+
+  @Test
+  void clickButtonPositionOccursAtThirdCall() {
+    Position clickPosition = new Position(2, 3);
+    MouseCommandExecutor executor = mock(MouseCommandExecutor.class);
+    Mouse mouse = new Mouse(executor, () -> clickPosition);
+    Screen screen = mock(Screen.class);
+    Supplier<Long> clock = mock(Supplier.class);
+    when(clock.get()).thenReturn(0L, 1L, 2L, 3L, 4L, 5L);
+
+    Controller sut = new ControllerBuilder()
+        .setMouse(mouse)
+        .setScreen(screen)
+        .setObserverClock(clock)
+        .setObserverRefreshInterval(1)
+        .build();
+
+    when(screen.positionOf(any(Supplier.class)))
+        .thenReturn(Optional.empty())
+        .thenReturn(Optional.empty())
+        .thenReturn(Optional.of(clickPosition));
+
+    Optional<Position> result = sut.clickButton(() -> new Image(new int[]{0}, 1, 1), 2);
+
+    assertThat(result).isPresent().contains(clickPosition);
+    InOrder inOrder = inOrder(executor);
+    inOrder.verify(executor).move(clickPosition.getX(), clickPosition.getY());
+    inOrder.verify(executor).press(MouseButton.LEFT);
+    inOrder.verify(executor).release(MouseButton.LEFT);
+    verifyNoMoreInteractions(executor);
+  }
 }

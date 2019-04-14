@@ -24,16 +24,18 @@ public class Controller {
 
 
   public Controller(final Clipboard clipboard, final Keyboard keyboard, final Mouse mouse,
-                     final Screen screen) {
+                     final Screen screen, final Supplier<Long> clock, final int refreshInterval) {
     Ensure.notNull(clipboard);
     Ensure.notNull(keyboard);
     Ensure.notNull(mouse);
     Ensure.notNull(screen);
+    Ensure.notNull(clock);
+    Ensure.notNegative(refreshInterval);
     this.clipboard = clipboard;
     this.keyboard = keyboard;
     this.mouse = mouse;
     this.screen = screen;
-    this.screenObserver = new ScreenObserver(screen);
+    this.screenObserver = new ScreenObserver(screen, clock, refreshInterval);
   }
 
   public Controller pasteText(final String text) {
@@ -47,8 +49,8 @@ public class Controller {
     return clipboard().get();
   }
 
-  public Optional<Position> clickButton(final Supplier<Image> patternSupplier) {
-    Optional<Position> clickPosition = screen().clickPositionOf(patternSupplier);
+  private Optional<Position> clickAtPosition(final Supplier<Optional<Position>> positionSupplier) {
+    Optional<Position> clickPosition = positionSupplier.get();
     if (clickPosition.isPresent()) {
       mouse().move(clickPosition.get());
       if (clickPosition.get().equals(mouse().currentPosition())) {
@@ -58,6 +60,15 @@ public class Controller {
       }
     }
     return clickPosition;
+  }
+
+  public Optional<Position> clickButton(final Supplier<Image> patternSupplier) {
+    return clickAtPosition(() -> screen().clickPositionOf(patternSupplier));
+  }
+
+  public Optional<Position> clickButton(final Supplier<Image> patternSupplier, final int timeout) {
+    return clickAtPosition(() -> screenObserver().waitUntil(patternSupplier, timeout)
+        .map(position -> position.addSubPosition(patternSupplier.get().middle())));
   }
 
   public Clipboard clipboard() {

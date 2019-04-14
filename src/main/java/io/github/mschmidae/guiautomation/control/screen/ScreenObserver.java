@@ -22,12 +22,6 @@ public class ScreenObserver extends AbstractObserver {
   private final Screen screen;
   private final int refreshInterval;
   private final ExecutorService executor = Executors.newCachedThreadPool();
-  @Getter(AccessLevel.PUBLIC)
-  private final Supplier<Long> clock;
-
-  public ScreenObserver(final Screen screen) {
-    this(screen, System::currentTimeMillis, DEFAULT_REFRESH_INTERVAL);
-  }
 
   public ScreenObserver(final Screen screen, final Supplier<Long> clock,
                         final int refreshInterval) {
@@ -35,7 +29,6 @@ public class ScreenObserver extends AbstractObserver {
     Ensure.notNull(screen);
     Ensure.notNegative(refreshInterval);
     this.screen = screen;
-    this.clock = clock;
     this.refreshInterval = refreshInterval;
   }
 
