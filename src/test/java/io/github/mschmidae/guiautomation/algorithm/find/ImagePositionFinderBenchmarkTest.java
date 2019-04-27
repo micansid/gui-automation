@@ -2,6 +2,8 @@ package io.github.mschmidae.guiautomation.algorithm.find;
 
 import io.github.mschmidae.guiautomation.util.Position;
 import io.github.mschmidae.guiautomation.util.image.Image;
+import java.io.ByteArrayOutputStream;
+import java.io.PrintStream;
 import java.util.Arrays;
 import java.util.HashMap;
 import java.util.HashSet;
@@ -9,6 +11,8 @@ import java.util.List;
 import java.util.Map;
 import java.util.Optional;
 import java.util.Set;
+import org.junit.jupiter.api.AfterEach;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
 
@@ -20,6 +24,23 @@ import static org.mockito.Mockito.when;
 class ImagePositionFinderBenchmarkTest {
   private final static Image TEST_IMAGE = new Image(new int[]{0}, 1, 1);
   private final static Position TEST_POSITION = new Position(0, 0);
+
+  private final ByteArrayOutputStream outContent = new ByteArrayOutputStream();
+  private final ByteArrayOutputStream errContent = new ByteArrayOutputStream();
+  private final PrintStream originalOut = System.out;
+  private final PrintStream originalErr = System.err;
+
+  @BeforeEach
+  void setUpStreams() {
+    System.setOut(new PrintStream(getOutContent()));
+    System.setErr(new PrintStream(getErrContent()));
+  }
+
+  @AfterEach
+  void restoreStreams() {
+    System.setOut(getOriginalOut());
+    System.setErr(getOriginalErr());
+  }
 
   @Test
   void findWithSameResult() {
@@ -146,5 +167,21 @@ class ImagePositionFinderBenchmarkTest {
         .isInstanceOf(RuntimeException.class);
     assertThatThrownBy(() -> finderBenchmark.at(TEST_IMAGE, TEST_IMAGE, TEST_POSITION.getX(), TEST_POSITION.getY()))
         .isInstanceOf(RuntimeException.class);
+  }
+
+  private ByteArrayOutputStream getOutContent() {
+    return outContent;
+  }
+
+  private ByteArrayOutputStream getErrContent() {
+    return errContent;
+  }
+
+  private PrintStream getOriginalOut() {
+    return originalOut;
+  }
+
+  private PrintStream getOriginalErr() {
+    return originalErr;
   }
 }
