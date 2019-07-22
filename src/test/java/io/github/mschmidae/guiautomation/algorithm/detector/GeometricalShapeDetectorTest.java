@@ -20,7 +20,7 @@ class GeometricalShapeDetectorTest {
   @ParameterizedTest
   @MethodSource("detectorProvider")
   void detectRectangleOfButton(final GeometricalShapeDetector detector) {
-    TestData testData = TestData.BUTTON_COMMIT;
+    TestData testData = TestData.BUTTON_CANCEL;
     Image button = testData.getImage();
     Section section = new Section(testData.getPositions().get(0), button.getWidth(), button.getHeight());
     List<Section> result = detector.detectRectangles(button);
