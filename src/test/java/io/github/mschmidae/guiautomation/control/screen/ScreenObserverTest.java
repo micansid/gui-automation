@@ -1,6 +1,6 @@
 package io.github.mschmidae.guiautomation.control.screen;
 
-import io.github.mschmidae.guiautomation.algorithm.find.FinderTestData;
+import io.github.mschmidae.guiautomation.TestData;
 import io.github.mschmidae.guiautomation.util.Position;
 import io.github.mschmidae.guiautomation.util.function.TriFunction;
 import io.github.mschmidae.guiautomation.util.image.Image;
@@ -23,7 +23,6 @@ import static org.assertj.core.api.Assertions.assertThat;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.eq;
 import static org.mockito.Mockito.mock;
-import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.when;
 
 class ScreenObserverTest {
@@ -190,21 +189,21 @@ class ScreenObserverTest {
     Screen screen = mock(Screen.class);
     ScreenObserver sut = new ScreenObserver(screen, clock, 1);
 
-    Collection<Supplier<Image>> suppliers = Arrays.asList(FinderTestData.BUTTON_COMMIT,
-        FinderTestData.BUTTON_CANCEL);
+    Collection<Supplier<Image>> suppliers = Arrays.asList(TestData.BUTTON_COMMIT,
+        TestData.BUTTON_CANCEL);
     Map<Image, List<Position>> firstPositions = new HashMap<>();
-    firstPositions.put(FinderTestData.BUTTON_COMMIT.getImage(), Arrays.asList(new Position(1, 1)));
-    firstPositions.put(FinderTestData.BUTTON_CANCEL.getImage(), Arrays.asList(new Position(2, 2)));
+    firstPositions.put(TestData.BUTTON_COMMIT.getImage(), Arrays.asList(new Position(1, 1)));
+    firstPositions.put(TestData.BUTTON_CANCEL.getImage(), Arrays.asList(new Position(2, 2)));
     Map<Image, List<Position>> secondPositions = new HashMap<>();
-    secondPositions.put(FinderTestData.BUTTON_COMMIT.getImage(), new ArrayList<>());
-    secondPositions.put(FinderTestData.BUTTON_CANCEL.getImage(), new ArrayList<>());
+    secondPositions.put(TestData.BUTTON_COMMIT.getImage(), new ArrayList<>());
+    secondPositions.put(TestData.BUTTON_CANCEL.getImage(), new ArrayList<>());
 
     when(screen.positionsOf(suppliers))
         .thenReturn(firstPositions)
         .thenReturn(secondPositions);
     Map<Image, Boolean> imagesAtOnePositionResult = new HashMap<>();
-    imagesAtOnePositionResult.put(FinderTestData.BUTTON_COMMIT.getImage(), false);
-    imagesAtOnePositionResult.put(FinderTestData.BUTTON_CANCEL.getImage(), false);
+    imagesAtOnePositionResult.put(TestData.BUTTON_COMMIT.getImage(), false);
+    imagesAtOnePositionResult.put(TestData.BUTTON_CANCEL.getImage(), false);
     when(screen.imagesAtOnePosition(firstPositions))
         .thenReturn(imagesAtOnePositionResult);
 

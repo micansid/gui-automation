@@ -1,5 +1,6 @@
 package io.github.mschmidae.guiautomation.algorithm.find;
 
+import io.github.mschmidae.guiautomation.TestData;
 import io.github.mschmidae.guiautomation.util.Position;
 import io.github.mschmidae.guiautomation.util.image.Image;
 import org.junit.jupiter.params.ParameterizedTest;
@@ -22,107 +23,107 @@ class ImagePositionFinderTest {
   @ParameterizedTest
   @MethodSource("finderProvider")
   void findPositionOfCommitButton(final ImagePositionFinder finder) {
-    findFirstPositionOf(finder, FinderTestData.BUTTON_COMMIT);
+    findFirstPositionOf(finder, TestData.BUTTON_COMMIT);
   }
 
   @ParameterizedTest
   @MethodSource("finderProvider")
   void findPositionOfCancelButton(final ImagePositionFinder finder) {
-    findFirstPositionOf(finder, FinderTestData.BUTTON_CANCEL);
+    findFirstPositionOf(finder, TestData.BUTTON_CANCEL);
   }
 
   @ParameterizedTest
   @MethodSource("finderProvider")
   void findPositionOfHelpButton(final ImagePositionFinder finder) {
-    findFirstPositionOf(finder, FinderTestData.BUTTON_HELP);
+    findFirstPositionOf(finder, TestData.BUTTON_HELP);
   }
 
   @ParameterizedTest
   @MethodSource("finderProvider")
   void findFirstPositionsOfUncheckedCheckboxes(final ImagePositionFinder finder) {
-    findFirstPositionOf(finder, FinderTestData.CHECKBOX_UNCHECKED);
+    findFirstPositionOf(finder, TestData.CHECKBOX_UNCHECKED);
   }
 
   @ParameterizedTest
   @MethodSource("finderProvider")
   void findFirstPositionsOfCheckedCheckboxes(final ImagePositionFinder finder) {
-    findFirstPositionOf(finder, FinderTestData.CHECKBOX_CHECKED);
+    findFirstPositionOf(finder, TestData.CHECKBOX_CHECKED);
   }
 
   @ParameterizedTest
   @MethodSource("finderProvider")
   void findFirstPositionsOfButtonFramesContainsTransparentParts(final ImagePositionFinder finder) {
-    findFirstPositionOf(finder, FinderTestData.BUTTON_FRAME);
+    findFirstPositionOf(finder, TestData.BUTTON_FRAME);
   }
 
   @ParameterizedTest
   @MethodSource("finderProvider")
   void findPositionOfScreenImage(final ImagePositionFinder finder) {
-    findFirstPositionOf(finder, FinderTestData.SCREEN);
+    findFirstPositionOf(finder, TestData.SCREEN);
   }
 
   @ParameterizedTest
   @MethodSource("finderProvider")
   void findAllPositionOfCommitButton(final ImagePositionFinder finder) {
-    findAllPositionOf(finder, FinderTestData.BUTTON_COMMIT);
+    findAllPositionOf(finder, TestData.BUTTON_COMMIT);
   }
 
   @ParameterizedTest
   @MethodSource("finderProvider")
   void findAllPositionOfCancelButton(final ImagePositionFinder finder) {
-    findAllPositionOf(finder, FinderTestData.BUTTON_CANCEL);
+    findAllPositionOf(finder, TestData.BUTTON_CANCEL);
   }
 
   @ParameterizedTest
   @MethodSource("finderProvider")
   void findAllPositionOfHelpButton(final ImagePositionFinder finder) {
-    findAllPositionOf(finder, FinderTestData.BUTTON_HELP);
+    findAllPositionOf(finder, TestData.BUTTON_HELP);
   }
 
   @ParameterizedTest
   @MethodSource("finderProvider")
   void findAllPositionsOfUncheckedCheckboxes(final ImagePositionFinder finder) {
-    findAllPositionOf(finder, FinderTestData.CHECKBOX_UNCHECKED);
+    findAllPositionOf(finder, TestData.CHECKBOX_UNCHECKED);
   }
 
   @ParameterizedTest
   @MethodSource("finderProvider")
   void findAllPositionsOfCheckedCheckboxes(final ImagePositionFinder finder) {
-    findAllPositionOf(finder, FinderTestData.CHECKBOX_CHECKED);
+    findAllPositionOf(finder, TestData.CHECKBOX_CHECKED);
   }
 
   @ParameterizedTest
   @MethodSource("finderProvider")
   void findAllPositionsOfButtonFramesContainsTransparentParts(final ImagePositionFinder finder) {
-    findAllPositionOf(finder, FinderTestData.BUTTON_FRAME);
+    findAllPositionOf(finder, TestData.BUTTON_FRAME);
   }
 
   @ParameterizedTest
   @MethodSource("finderProvider")
   void findAllPositionsOfAllPattern(final ImagePositionFinder finder) {
     Map<Image, List<Position>> expected = new HashMap<>();
-    for (FinderTestData data : FinderTestData.values()) {
+    for (TestData data : TestData.values()) {
       expected.put(data.getImage(), data.getPositions());
     }
 
-    Map<Image, List<Position>> result = finder.findAll(FinderTestData.SCREEN.getImage(),
+    Map<Image, List<Position>> result = finder.findAll(TestData.SCREEN.getImage(),
         expected.keySet());
 
     assertThat(result).isEqualTo(expected);
   }
 
 
-  private void findFirstPositionOf(final ImagePositionFinder finder, final FinderTestData pattern) {
-    assertThat(finder.at(FinderTestData.SCREEN.getImage(), pattern.getImage(),
+  private void findFirstPositionOf(final ImagePositionFinder finder, final TestData pattern) {
+    assertThat(finder.at(TestData.SCREEN.getImage(), pattern.getImage(),
         pattern.getPositions().get(0)))
         .isTrue();
-    assertThat(finder.find(FinderTestData.SCREEN.getImage(), pattern.getImage()))
+    assertThat(finder.find(TestData.SCREEN.getImage(), pattern.getImage()))
         .isPresent()
         .contains(pattern.getPositions().get(0));
   }
 
-  private void findAllPositionOf(final ImagePositionFinder finder, final FinderTestData pattern) {
-    assertThat(finder.findAll(FinderTestData.SCREEN.getImage(), pattern.getImage()))
+  private void findAllPositionOf(final ImagePositionFinder finder, final TestData pattern) {
+    assertThat(finder.findAll(TestData.SCREEN.getImage(), pattern.getImage()))
         .isEqualTo(pattern.getPositions());
   }
 

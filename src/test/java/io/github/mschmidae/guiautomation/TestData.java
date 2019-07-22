@@ -1,4 +1,4 @@
-package io.github.mschmidae.guiautomation.algorithm.find;
+package io.github.mschmidae.guiautomation;
 
 import io.github.mschmidae.guiautomation.util.Position;
 import io.github.mschmidae.guiautomation.util.image.Image;
@@ -10,7 +10,7 @@ import java.util.Collections;
 import java.util.List;
 import java.util.function.Supplier;
 
-public enum FinderTestData implements Supplier<Image> {
+public enum TestData implements Supplier<Image> {
   SCREEN("intellij_commit_changes.png", new Position(0, 0)),
   BUTTON_COMMIT("intellij_button_commit.png", new Position(485, 787)),
   BUTTON_CANCEL("intellij_button_cancel.png", new Position(599, 787)),
@@ -28,7 +28,7 @@ public enum FinderTestData implements Supplier<Image> {
   private final Image image;
   private final List<Position> positions = new ArrayList<>();
 
-  FinderTestData(final String imagePath, Position... positions) {
+  TestData(final String imagePath, Position... positions) {
     image = new ImageLoader().loadFromResources(imagePath)
         .orElseThrow(() -> new RuntimeException("The image " + imagePath + " could not be loaded"));
     this.positions.addAll(Arrays.asList(positions));
